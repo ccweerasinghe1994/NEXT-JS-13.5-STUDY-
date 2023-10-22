@@ -4,6 +4,7 @@ import Image from "next/image";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import Theme from "@/components/shared/navbar/Theme";
 import MobileNav from "@/components/shared/navbar/MobileNav";
+import GlobalSearch from "@/components/shared/search/GlobalSearch";
 
 type TNavBar = {};
 const NavBar: FC<TNavBar> = () => {
@@ -28,7 +29,7 @@ const NavBar: FC<TNavBar> = () => {
           Stack <span className={"text-primary-500"}>Flow</span>
         </p>
       </Link>
-      {/*  GLOBAL SEARCH COMPONENT */}
+      <GlobalSearch />
       <div className={"flex-between gap-5"}>
         <Theme />
         <SignedIn>
