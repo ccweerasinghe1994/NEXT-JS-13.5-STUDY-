@@ -42,7 +42,7 @@ const NavBar: FC<TNavBar> = () => {
             afterSignOutUrl="/"
           />
         </SignedIn>
-        Mobile Navigation
+        {/* Mobile Navigation */}
       </div>
     </nav>
   );
