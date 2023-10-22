@@ -9,10 +9,10 @@ import {
   useEffect,
 } from "react";
 
-type TTheme = "dark" | "light" | undefined;
+export type TTheme = "dark" | "light" | undefined;
 
 type TThemeContext = {
-  theme: "dark" | "light" | undefined;
+  theme: TTheme;
   setTheme: (theme: TTheme) => void;
 };
 
@@ -24,18 +24,22 @@ type TThemeProvider = {
 export const ThemeProvider: FC<TThemeProvider> = ({ children }) => {
   const [theme, setTheme] = useState<"dark" | "light" | undefined>(undefined);
 
-  const handleThemeChange = (theme: TTheme) => {
-    if (theme === "dark") {
-      setTheme("light");
+  const handleThemeChange = () => {
+    if (
+      localStorage.theme === "dark" ||
+      (!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
       document.documentElement.classList.add("dark");
-    } else {
       setTheme("dark");
-      document.documentElement.classList.add("light");
+    } else {
+      document.documentElement.classList.remove("dark");
+      setTheme("light");
     }
   };
 
   useEffect(() => {
-    handleThemeChange(theme);
+    handleThemeChange();
   }, [theme]);
 
   return (
