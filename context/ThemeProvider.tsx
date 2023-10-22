@@ -7,12 +7,13 @@ import {
   ReactNode,
   FC,
   useEffect,
+  useCallback,
 } from "react";
 
-type TTheme = "dark" | "light" | undefined;
+type TTheme = "dark" | "light";
 
 type TThemeContext = {
-  theme: "dark" | "light" | undefined;
+  theme: "dark" | "light";
   setTheme: (theme: TTheme) => void;
 };
 
@@ -22,21 +23,21 @@ type TThemeProvider = {
   children: ReactNode;
 };
 export const ThemeProvider: FC<TThemeProvider> = ({ children }) => {
-  const [theme, setTheme] = useState<"dark" | "light" | undefined>(undefined);
+  const [theme, setTheme] = useState<"dark" | "light">("light");
 
-  const handleThemeChange = (theme: TTheme) => {
+  const handleThemeChange = useCallback((theme: TTheme) => {
     if (theme === "dark") {
       setTheme("light");
-      document.documentElement.classList.add("dark");
+      document.documentElement.classList.add("light");
     } else {
       setTheme("dark");
-      document.documentElement.classList.add("light");
+      document.documentElement.classList.add("dark");
     }
-  };
+  }, []);
 
   useEffect(() => {
     handleThemeChange(theme);
-  }, [theme]);
+  }, []);
 
   return (
     <ThemeContext.Provider
