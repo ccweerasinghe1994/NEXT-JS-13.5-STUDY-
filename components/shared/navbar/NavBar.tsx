@@ -2,6 +2,7 @@ import { FC } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { SignedIn, UserButton } from "@clerk/nextjs";
+import Theme from "@/components/shared/navbar/Theme";
 
 type TNavBar = {};
 const NavBar: FC<TNavBar> = () => {
@@ -20,7 +21,7 @@ const NavBar: FC<TNavBar> = () => {
         />
         <p
           className={
-            "h2-bold min-sm:hidden font-spaceGrotesk text-dark-100 dark:text-light-900"
+            "h2-bold font-spaceGrotesk text-dark-100 dark:text-light-900 max-sm:hidden"
           }
         >
           Stack <span className={"text-primary-500"}>Flow</span>
@@ -28,7 +29,7 @@ const NavBar: FC<TNavBar> = () => {
       </Link>
       {/*  GLOBAL SEARCH COMPONENT */}
       <div className={"flex-between gap-5"}>
-        Theme
+        <Theme />
         <SignedIn>
           <UserButton
             appearance={{
