@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { sidebarLinks } from "@/CONSTANTS";
 import { usePathname } from "next/navigation";
 
-const NavContent = () => {
+export const NavContent = () => {
   const pathName = usePathname();
   return (
     <section className={"flex h-full flex-col gap-6 pt-16"}>
