@@ -6,7 +6,7 @@ import Image from "next/image";
 import { SignedIn, SignedOut, SignOutButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 
-const SideBar = () => {
+const LeftSideBar = () => {
   const pathName = usePathname();
   return (
     <section
@@ -100,4 +100,4 @@ const SideBar = () => {
   );
 };
 
-export default SideBar;
+export default LeftSideBar;
