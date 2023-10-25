@@ -46,17 +46,23 @@ export type TFilterItem = {
 };
 
 export type TTag = {
-  _id: string;
+  _id: number;
   name: string;
 };
 
+export type TAuthor = {
+  _id: number;
+  name: string;
+  picture: string;
+};
+
 export type TQuestion = {
-  _id: string;
+  _id: number;
   title: string;
   tags: TTag[];
-  author: string;
-  upVotes: number;
+  author: TAuthor;
+  upVotes: number | string;
   views: number;
   answers: number;
-  createdAt: string;
+  createdAt: Date;
 };

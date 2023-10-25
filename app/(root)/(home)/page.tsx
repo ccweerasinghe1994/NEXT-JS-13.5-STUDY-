@@ -6,46 +6,55 @@ import { HOME_PAGE_FILTERS } from "@/CONSTANTS/filters";
 import HomeFilter from "@/components/home/HomeFilter";
 import NoResult from "@/components/shared/noResult/NoResult";
 import { TQuestion } from "@/types/types";
+import QuestionCard from "@/components/cards/QuestionCard";
 
 const questions: TQuestion[] = [
-  // {
-  //   _id: 1,
-  //   title: "How to use React Query?",
-  //   tags: [
-  //     {
-  //       _id: 1,
-  //       name: "react",
-  //     },
-  //     {
-  //       _id: 2,
-  //       name: "react-query",
-  //     },
-  //   ],
-  //   author: "John Doe",
-  //   upVotes: 10,
-  //   views: 100,
-  //   answers: 2,
-  //   createdAt: "2021-09-01T12:00:00.000Z",
-  // },
-  // {
-  //   _id: 2,
-  //   title: "How to use add a new route in Next.js?",
-  //   tags: [
-  //     {
-  //       _id: 1,
-  //       name: "next.js",
-  //     },
-  //     {
-  //       _id: 2,
-  //       name: "react",
-  //     },
-  //   ],
-  //   author: "John Doe",
-  //   upVotes: 10,
-  //   views: 100,
-  //   answers: 2,
-  //   createdAt: "2021-09-01T12:00:00.000Z",
-  // },
+  {
+    _id: 1,
+    title: "How to use React Query?",
+    tags: [
+      {
+        _id: 1,
+        name: "react",
+      },
+      {
+        _id: 2,
+        name: "react-query",
+      },
+    ],
+    author: {
+      _id: 1,
+      name: "John Doe",
+      picture: "/assets/icons/avatar.svg",
+    },
+    upVotes: 1000000,
+    views: 4000000,
+    answers: 12222222,
+    createdAt: new Date("2021-09-01T12:00:00.000Z"),
+  },
+  {
+    _id: 2,
+    title: "How to use add a new route in Next.js?",
+    tags: [
+      {
+        _id: 1,
+        name: "next.js",
+      },
+      {
+        _id: 2,
+        name: "react",
+      },
+    ],
+    author: {
+      _id: 1,
+      name: "John Doe",
+      picture: "/assets/icons/avatar.svg",
+    },
+    upVotes: 10,
+    views: 100,
+    answers: 2,
+    createdAt: new Date("2023-09-01T12:00:00.000Z"),
+  },
 ];
 
 export default function Home() {
@@ -83,11 +92,10 @@ export default function Home() {
       <HomeFilter />
       <div className="mt-10 flex w-full flex-col gap-6">
         {questions.length > 0 ? (
-          questions.map(
-            (question) =>
-              // <QuestionCard key={question._id} question={question} />
-              " Question card",
-          )
+          questions.map((question) => (
+            // <QuestionCard key={question._id} question={question} />
+            <QuestionCard key={question._id} question={question} />
+          ))
         ) : (
           <NoResult
             title={"There is no questions to show"}
