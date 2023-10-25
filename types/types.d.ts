@@ -1,4 +1,5 @@
 import { BADGE_CRITERIA } from "@/constants";
+
 export interface SidebarLink {
   imgURL: string;
   route: string;
@@ -38,3 +39,24 @@ export interface BadgeCounts {
   BRONZE: number;
 }
 export type BadgeCriteriaType = keyof typeof BADGE_CRITERIA;
+
+export type TFilterItem = {
+  name: string;
+  value: string;
+};
+
+export type TTag = {
+  _id: string;
+  name: string;
+};
+
+export type TQuestion = {
+  _id: string;
+  title: string;
+  tags: TTag[];
+  author: string;
+  upVotes: number;
+  views: number;
+  answers: number;
+  createdAt: string;
+};
