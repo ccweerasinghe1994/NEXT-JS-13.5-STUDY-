@@ -5,8 +5,9 @@ import Filter from "@/components/shared/filters/Filter";
 import { HOME_PAGE_FILTERS } from "@/CONSTANTS/filters";
 import HomeFilter from "@/components/home/HomeFilter";
 import NoResult from "@/components/shared/noResult/NoResult";
+import { TQuestion } from "@/types/types";
 
-const questions = [
+const questions: TQuestion[] = [
   // {
   //   _id: 1,
   //   title: "How to use React Query?",
