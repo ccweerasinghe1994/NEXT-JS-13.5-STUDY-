@@ -1,7 +1,7 @@
 "use client";
-import React, { FC, useRef } from "react";
+import React, { FC, KeyboardEvent, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { ControllerRenderProps, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,6 +15,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { QuestionsSchema, TQuestionsSchema } from "@/lib/validations";
 import { Editor } from "@tinymce/tinymce-react";
+import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 
 type TQuestionProps = {};
 
@@ -39,6 +41,41 @@ const Question: FC<TQuestionProps> = () => {
     // ✅ This will be type-safe and validated.
     console.log(values);
   }
+
+  const handleInputKeyDown = (
+    event: KeyboardEvent<HTMLInputElement>,
+    field: ControllerRenderProps<TQuestionsSchema, "tags">,
+  ) => {
+    if (event.key === "Enter" && field.name === "tags") {
+      event.preventDefault();
+      const tagInput = event.target as HTMLInputElement;
+      const value = tagInput.value.trim();
+
+      if (value !== "") {
+        if (value.length > 15) {
+          return form.setError("tags", {
+            type: "maxLength",
+            message: "Tag length must be less than 15 characters",
+          });
+        }
+        if (!field.value.includes(value as never)) {
+          form.setValue("tags", [...field.value, value]);
+          tagInput.value = "";
+          form.clearErrors("tags");
+        }
+      } else {
+        form.trigger("tags");
+      }
+    }
+  };
+  const handleTagRemove = (
+    tag: string,
+    field: ControllerRenderProps<TQuestionsSchema, "tags">,
+  ) => {
+    const newTags = field.value.filter((t) => t !== tag);
+    form.setValue("tags", newTags);
+  };
+
   return (
     <Form {...form}>
       <form
@@ -137,13 +174,41 @@ const Question: FC<TQuestionProps> = () => {
                 Question Title <span className={"text-primary-500"}>*</span>
               </FormLabel>
               <FormControl className={"mt-3.5"}>
-                <Input
-                  className={
-                    "no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
-                  }
-                  placeholder={'Add tags (e.g. "javascript" "react")'}
-                  {...field}
-                />
+                <>
+                  <Input
+                    className={
+                      "no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
+                    }
+                    placeholder={'Add tags (e.g. "javascript" "react")'}
+                    onKeyDown={(e) => handleInputKeyDown(e, field)}
+                  />
+                  {field.value.length > 0 && (
+                    <div className={"flex-start mt-2.5 gap-2.5"}>
+                      {field.value.map((tag) => {
+                        return (
+                          <Badge
+                            key={tag}
+                            className={
+                              "subtle-medium background-light800_dark300 text-dark400_light500 flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 capitalize"
+                            }
+                            onClick={() => handleTagRemove(tag, field)}
+                          >
+                            {tag}
+                            <Image
+                              src={"/assets/icons/close.svg"}
+                              alt={"close icons"}
+                              width={16}
+                              height={16}
+                              className={
+                                "cursor-pointer object-contain invert-0 dark:invert"
+                              }
+                            />
+                          </Badge>
+                        );
+                      })}
+                    </div>
+                  )}
+                </>
               </FormControl>
               <FormDescription className={"body-regular mt-2.5 text-light-500"}>
                 Add up to 3 tags to describe what your question is about. You
