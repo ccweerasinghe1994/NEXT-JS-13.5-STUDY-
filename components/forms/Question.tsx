@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, KeyboardEvent, useRef } from "react";
+import React, { FC, KeyboardEvent, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ControllerRenderProps, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,10 @@ import Image from "next/image";
 
 type TQuestionProps = {};
 
+const formType = "edit";
+
 const Question: FC<TQuestionProps> = () => {
+  const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const editorRef = useRef(null);
   const form = useForm<TQuestionsSchema>({
     resolver: zodResolver(QuestionsSchema),
@@ -37,9 +40,13 @@ const Question: FC<TQuestionProps> = () => {
   // };
   // 2. Define a submit handler.
   function onSubmit(values: TQuestionsSchema) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    setIsFormSubmitting(true);
+
+    try {
+    } catch (error) {
+    } finally {
+      setIsFormSubmitting(false);
+    }
   }
 
   const handleInputKeyDown = (
@@ -104,7 +111,11 @@ const Question: FC<TQuestionProps> = () => {
                 Be specific and imagine you’re asking a question from another
                 person
               </FormDescription>
-              <FormMessage className={"text-red-500"} />
+              <FormMessage
+                className={
+                  "rounded bg-red-500/10 py-2 text-center text-red-500"
+                }
+              />
             </FormItem>
           )}
         />
@@ -158,7 +169,11 @@ const Question: FC<TQuestionProps> = () => {
                 Introduce the problem and expand on what you want to put in the
                 title Minimum 20 characters
               </FormDescription>
-              <FormMessage className={"text-red-500"} />
+              <FormMessage
+                className={
+                  "rounded bg-red-500/10 py-2 text-center text-red-500"
+                }
+              />
             </FormItem>
           )}
         />
@@ -214,12 +229,26 @@ const Question: FC<TQuestionProps> = () => {
                 Add up to 3 tags to describe what your question is about. You
                 need to press enter to add a tag.
               </FormDescription>
-              <FormMessage className={"text-red-500"} />
+              <FormMessage
+                className={
+                  "rounded bg-red-500/10 py-2 text-center text-red-500"
+                }
+              />
             </FormItem>
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <Button
+          className={"primary-gradient w-fit text-light-900"}
+          type="submit"
+          disabled={isFormSubmitting}
+        >
+          {isFormSubmitting ? (
+            <> {formType === "edit" ? "Editing..." : "Posting..."}</>
+          ) : (
+            <>{formType === "edit" ? "Edit Question" : "Ask a Question"}</>
+          )}
+        </Button>
       </form>
     </Form>
   );
