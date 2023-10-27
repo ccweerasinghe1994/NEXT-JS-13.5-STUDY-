@@ -1,5 +1,5 @@
 "use client";
-import { HOME_PAGE_FILTERS } from "@/CONSTANTS/filters";
+import { HOME_PAGE_FILTERS } from "@/constants/filters";
 import { Button } from "@/components/ui/button";
 
 const HomeFilter = () => {

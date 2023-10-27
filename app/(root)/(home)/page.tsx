@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import LocalSearch from "@/components/shared/search/LocalSearch";
 import Filter from "@/components/shared/filters/Filter";
-import { HOME_PAGE_FILTERS } from "@/CONSTANTS/filters";
+import { HOME_PAGE_FILTERS } from "@/constants/filters";
 import HomeFilter from "@/components/home/HomeFilter";
 import NoResult from "@/components/shared/noResult/NoResult";
 import { TQuestion } from "@/types/types";
