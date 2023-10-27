@@ -43,6 +43,7 @@ const Question: FC<TQuestionProps> = () => {
     setIsFormSubmitting(true);
 
     try {
+      console.log(values);
     } catch (error) {
     } finally {
       setIsFormSubmitting(false);
