@@ -3,18 +3,17 @@
 import { connectToDatabase } from "@/lib/mogoose";
 import Question from "@/database/question.model";
 import Tag, { ITag } from "@/database/tag.model";
+import {
+  ICreateQuestionParams,
+  IGetQuestionsParams,
+} from "@/lib/actions/shared";
+import User from "@/database/user.model";
+import { revalidatePath } from "next/cache";
 
-type TCreateQuestion = {
-  title: string;
-  content: string;
-  tags: string[];
-  author: string;
-  path: string;
-};
-export async function createQuestion(params: TCreateQuestion) {
+export async function createQuestion(params: ICreateQuestionParams) {
   try {
     await connectToDatabase();
-    const { title, content, tags, author } = params;
+    const { title, content, tags, author, path } = params;
     const question = await Question.create({
       title,
       content,
@@ -49,6 +48,27 @@ export async function createQuestion(params: TCreateQuestion) {
         tags: { $each: tagDocuments },
       },
     });
+    revalidatePath(path);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function getQuestions(params: IGetQuestionsParams) {
+  try {
+    await connectToDatabase();
+    const questions = await Question.find({})
+      .populate({
+        path: "tags",
+        model: Tag,
+      })
+      .populate({
+        path: "author",
+        model: User,
+      })
+      .sort({ createdAt: -1 });
+    return { questions };
   } catch (error) {
     console.error(error);
     throw error;
