@@ -7,10 +7,10 @@ import HomeFilter from "@/components/home/HomeFilter";
 import NoResult from "@/components/shared/noResult/NoResult";
 import QuestionCard from "@/components/cards/QuestionCard";
 import { getQuestions } from "@/lib/actions/question.action";
+import { TQuestion } from "@/types/types";
 
 export default async function Home() {
   const { questions } = await getQuestions({});
-  console.log(questions);
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -47,7 +47,7 @@ export default async function Home() {
         {questions.length > 0 ? (
           questions.map((question) => (
             // <QuestionCard key={question._id} question={question} />
-            <QuestionCard key={question._id} question={question} />
+            <QuestionCard key={question._id} question={question as TQuestion} />
           ))
         ) : (
           <NoResult
