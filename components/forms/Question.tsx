@@ -18,14 +18,19 @@ import { Editor } from "@tinymce/tinymce-react";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { createQuestion } from "@/lib/actions/question.action";
+import { usePathname, useRouter } from "next/navigation";
 
-type TQuestionProps = {};
+type TQuestionProps = {
+  mongoUserId: string;
+};
 
 const formType = "edit";
 
-const Question: FC<TQuestionProps> = () => {
+const Question: FC<TQuestionProps> = ({ mongoUserId }) => {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const editorRef = useRef(null);
+  const router = useRouter();
+  const pathName = usePathname();
   const form = useForm<TQuestionsSchema>({
     resolver: zodResolver(QuestionsSchema),
     defaultValues: {
@@ -45,7 +50,15 @@ const Question: FC<TQuestionProps> = () => {
 
     try {
       console.log(values);
-      await createQuestion({});
+      console.log("mongoUserId", mongoUserId);
+      await createQuestion({
+        title: values.title,
+        content: values.explanation,
+        tags: values.tags,
+        author: JSON.parse(mongoUserId),
+        path: pathName,
+      });
+      router.push("/");
     } catch (error) {
     } finally {
       setIsFormSubmitting(false);
