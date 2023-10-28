@@ -17,6 +17,7 @@ import { QuestionsSchema, TQuestionsSchema } from "@/lib/validations";
 import { Editor } from "@tinymce/tinymce-react";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+import { createQuestion } from "@/lib/actions/question.action";
 
 type TQuestionProps = {};
 
@@ -39,11 +40,12 @@ const Question: FC<TQuestionProps> = () => {
   //   }
   // };
   // 2. Define a submit handler.
-  function onSubmit(values: TQuestionsSchema) {
+  async function onSubmit(values: TQuestionsSchema) {
     setIsFormSubmitting(true);
 
     try {
       console.log(values);
+      await createQuestion({});
     } catch (error) {
     } finally {
       setIsFormSubmitting(false);
@@ -139,6 +141,8 @@ const Question: FC<TQuestionProps> = () => {
                     // @ts-ignore
                     editorRef.current = editor;
                   }}
+                  onBlur={field.onBlur}
+                  onEditorChange={(content) => field.onChange(content)}
                   initialValue=""
                   init={{
                     height: 350,

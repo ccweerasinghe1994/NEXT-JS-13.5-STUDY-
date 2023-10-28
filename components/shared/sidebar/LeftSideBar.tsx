@@ -1,6 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { sidebarLinks } from "@/CONSTANTS";
+import { sidebarLinks } from "@/constants";
 import Link from "next/link";
 import Image from "next/image";
 import { SignedIn, SignedOut, SignOutButton } from "@clerk/nextjs";

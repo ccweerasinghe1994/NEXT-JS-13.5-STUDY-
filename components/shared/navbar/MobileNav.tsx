@@ -9,7 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { SignedOut } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
-import { sidebarLinks } from "@/CONSTANTS";
+import { sidebarLinks } from "@/constants";
 import { usePathname } from "next/navigation";
 
 export const NavContent = () => {
