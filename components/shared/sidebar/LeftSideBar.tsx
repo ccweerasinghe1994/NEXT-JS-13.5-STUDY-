@@ -3,7 +3,7 @@ import { usePathname } from "next/navigation";
 import { sidebarLinks } from "@/constants";
 import Link from "next/link";
 import Image from "next/image";
-import { SignedIn, SignedOut, SignOutButton } from "@clerk/nextjs";
+import { SignedOut } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 
 const LeftSideBar = () => {
@@ -48,15 +48,15 @@ const LeftSideBar = () => {
           );
         })}
       </div>
-      <SignedIn>
-        <Button
-          className={
-            "small-medium light-border-2 btn-tertiary text-dark400_light900 min-h-[41px] w-full rounded-lg px-4 py-3"
-          }
-        >
-          <SignOutButton>Logout</SignOutButton>
-        </Button>
-      </SignedIn>
+      {/* <SignedIn> */}
+      {/*  <Button */}
+      {/*    className={ */}
+      {/*      "small-medium light-border-2 btn-tertiary text-dark400_light900 min-h-[41px] w-full rounded-lg px-4 py-3" */}
+      {/*    } */}
+      {/*  > */}
+      {/*    <SignOutButton>Logout</SignOutButton> */}
+      {/*  </Button> */}
+      {/* </SignedIn> */}
       <SignedOut>
         <div className={"flex flex-col gap-3"}>
           <Link href={"/sign-in"}>

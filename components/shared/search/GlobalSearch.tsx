@@ -18,7 +18,6 @@ const GlobalSearch = () => {
           }
           type={"text"}
           placeholder={"Search Globally"}
-          value={""}
         />
       </div>
     </div>

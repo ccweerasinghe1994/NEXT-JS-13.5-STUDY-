@@ -5,11 +5,11 @@ export interface IQuestion extends Document {
   title: string;
   content: string;
   tags: ObjectId[];
-  views: number;
-  upvotes: ObjectId[];
-  downvotes: ObjectId[];
-  author: ObjectId;
-  answers: ObjectId[];
+  views?: number;
+  upvotes?: ObjectId[];
+  downvotes?: ObjectId[];
+  author?: ObjectId;
+  answers?: ObjectId[];
   createdAt: Date;
 }
 
