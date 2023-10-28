@@ -5,59 +5,12 @@ import Filter from "@/components/shared/filters/Filter";
 import { HOME_PAGE_FILTERS } from "@/constants/filters";
 import HomeFilter from "@/components/home/HomeFilter";
 import NoResult from "@/components/shared/noResult/NoResult";
-import { TQuestion } from "@/types/types";
 import QuestionCard from "@/components/cards/QuestionCard";
+import { getQuestions } from "@/lib/actions/question.action";
+import { TQuestion } from "@/types/types";
 
-const questions: TQuestion[] = [
-  {
-    _id: 1,
-    title: "How to use React Query?",
-    tags: [
-      {
-        _id: 1,
-        name: "react",
-      },
-      {
-        _id: 2,
-        name: "react-query",
-      },
-    ],
-    author: {
-      _id: 1,
-      name: "John Doe",
-      picture: "/assets/icons/avatar.svg",
-    },
-    upVotes: 1000000,
-    views: 4000000,
-    answers: 12222222,
-    createdAt: new Date("2021-09-01T12:00:00.000Z"),
-  },
-  {
-    _id: 2,
-    title: "How to use add a new route in Next.js?",
-    tags: [
-      {
-        _id: 1,
-        name: "next.js",
-      },
-      {
-        _id: 2,
-        name: "react",
-      },
-    ],
-    author: {
-      _id: 1,
-      name: "John Doe",
-      picture: "/assets/icons/avatar.svg",
-    },
-    upVotes: 10,
-    views: 100,
-    answers: 2,
-    createdAt: new Date("2023-09-01T12:00:00.000Z"),
-  },
-];
-
-export default function Home() {
+export default async function Home() {
+  const { questions } = await getQuestions({});
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -94,7 +47,7 @@ export default function Home() {
         {questions.length > 0 ? (
           questions.map((question) => (
             // <QuestionCard key={question._id} question={question} />
-            <QuestionCard key={question._id} question={question} />
+            <QuestionCard key={question._id} question={question as TQuestion} />
           ))
         ) : (
           <NoResult
