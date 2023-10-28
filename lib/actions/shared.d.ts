@@ -108,7 +108,7 @@ export interface GetTopInteractedTagsParams {
   userId: string;
   limit?: number;
 }
-export interface CreateUserParams {
+export interface ICreateUserParams {
   clerkId: string;
   name: string;
   username: string;
