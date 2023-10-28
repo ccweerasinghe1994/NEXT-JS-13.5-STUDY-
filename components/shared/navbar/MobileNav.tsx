@@ -7,10 +7,10 @@ import {
 } from "@/components/ui/sheet";
 import Image from "next/image";
 import Link from "next/link";
-import { SignedOut } from "@clerk/nextjs";
-import { Button } from "@/components/ui/button";
 import { sidebarLinks } from "@/constants";
 import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { SignedOut } from "@clerk/nextjs";
 
 export const NavContent = () => {
   const pathName = usePathname();
