@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 
 type TRenderTagsProps = {
-  _id: number;
+  _id: number | string;
   name: string;
   totalQuestions?: number;
   showCount?: boolean;

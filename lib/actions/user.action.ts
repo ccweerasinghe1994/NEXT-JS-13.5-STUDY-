@@ -4,6 +4,7 @@ import { connectToDatabase } from "@/lib/mogoose";
 import User, { IUser } from "@/database/user.model";
 import {
   DeleteUserParams,
+  GetAllUsersParams,
   ICreateUserParams,
   UpdateUserParams,
 } from "@/lib/actions/shared";
@@ -77,6 +78,34 @@ export const deleteUser = async (params: DeleteUserParams) => {
       author: findUser._id,
     });
     return await User.findByIdAndDelete(findUser._id);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// export const getAllUsers = async (params: GetAllUsersParams) => {
+//   try {
+//     const { page, pageSize, searchQuery, filter } = params;
+//     await connectToDatabase();
+//     return await User.find({});
+//   } catch (error) {
+//     console.error(error);
+//     throw error;
+//   }
+// };
+export const getAllUsers = async (params: GetAllUsersParams) => {
+  try {
+    const { page = 1, pageSize = 20, searchQuery, filter } = params;
+    console.log(page, pageSize, searchQuery, filter);
+    await connectToDatabase();
+    const users = await User.find({}).sort({
+      createdAt: -1,
+    });
+
+    return {
+      users,
+    };
   } catch (error) {
     console.error(error);
     throw error;
