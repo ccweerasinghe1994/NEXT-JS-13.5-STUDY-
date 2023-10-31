@@ -21,4 +21,9 @@ export const QuestionsSchema = z.object({
     .max(3, "cannot have more than 3 tags"),
 });
 
+export const AnswerSchema = z.object({
+  answer: z.string().min(100),
+});
+
 export type TQuestionsSchema = z.infer<typeof QuestionsSchema>;
+export type TAnswerSchema = z.infer<typeof AnswerSchema>;
