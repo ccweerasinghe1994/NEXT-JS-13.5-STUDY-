@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { TQuestion } from "@/types/types";
 import Link from "next/link";
-import RenderTags from "@/components/shared/tags/RenderTags";
+import RenderTag from "@/components/shared/tags/RenderTag";
 import Metric from "@/components/shared/metric/Metric";
 import { getTimStamp } from "@/lib/utils";
 
@@ -37,7 +37,7 @@ const QuestionCard: FC<TQuestionCardProps> = ({
       </div>
       <div className="mt-3.5 flex flex-wrap gap-2">
         {tags.map((tag) => (
-          <RenderTags key={tag._id} _id={tag._id} name={tag.name} />
+          <RenderTag key={tag._id} _id={tag._id} name={tag.name} />
         ))}
       </div>
       <div className="flex-between mt-6 flex w-full flex-wrap gap-3">

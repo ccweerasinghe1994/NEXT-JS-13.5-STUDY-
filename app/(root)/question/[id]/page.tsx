@@ -4,8 +4,17 @@ import Link from "next/link";
 import Metric from "@/components/shared/metric/Metric";
 import { getTimStamp } from "@/lib/utils";
 import ParseHTML from "@/components/shared/parseHtml/ParseHTML";
+import RenderTag from "@/components/shared/tags/RenderTag";
+import { FC } from "react";
+import Answer from "@/components/forms/Answer";
 
-const Page = async ({ params }) => {
+type TPageProps = {
+  params: {
+    id: string;
+  };
+};
+
+const Page: FC<TPageProps> = async ({ params }) => {
   const { question } = await getQuestionById({ questionId: params.id });
 
   return (
@@ -57,6 +66,12 @@ const Page = async ({ params }) => {
         />
       </div>
       <ParseHTML data={question.content} />
+      <div className="mt-8 flex flex-wrap gap-4">
+        {question.tags.map((tag) => (
+          <RenderTag key={tag._id} _id={tag._id} name={tag.name} />
+        ))}
+      </div>
+      <Answer />
     </>
   );
 };

@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getTopInteractiveTags } from "@/lib/actions/tag.action";
 import { Badge } from "@/components/ui/badge";
-import RenderTags from "@/components/shared/tags/RenderTags";
+import RenderTag from "@/components/shared/tags/RenderTag";
 
 type TUserCardProps = {
   user: {
@@ -43,7 +43,7 @@ const UserCard: FC<TUserCardProps> = async ({
           {interactedTags.length > 0 ? (
             <div className={"flex items-center gap-2"}>
               {interactedTags.map((tag) => (
-                <RenderTags key={tag._id} _id={tag._id} name={tag.name} />
+                <RenderTag key={tag._id} _id={tag._id} name={tag.name} />
               ))}
             </div>
           ) : (
