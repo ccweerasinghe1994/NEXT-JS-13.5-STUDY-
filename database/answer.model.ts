@@ -35,6 +35,10 @@ const AnswerSchema = new Schema<IAnswer>({
     ref: "User",
     default: [],
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Answer = models.Answer || model<IAnswer>("Answer", AnswerSchema);

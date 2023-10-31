@@ -3,14 +3,14 @@
 import { CreateAnswerParams, GetAnswersParams } from "@/lib/actions/shared";
 import { connectToDatabase } from "@/lib/mogoose";
 import { revalidatePath } from "next/cache";
-import Answer from "@/database/answer.model";
+import Answer, { IAnswer } from "@/database/answer.model";
 import Question from "@/database/question.model";
 
 export const createAnswer = async (params: CreateAnswerParams) => {
   const { content, author, question, path } = params;
   try {
     await connectToDatabase();
-    const newAnswer = new Answer({
+    const newAnswer: IAnswer = await Answer.create({
       content,
       author,
       question,
@@ -19,7 +19,6 @@ export const createAnswer = async (params: CreateAnswerParams) => {
     await Question.findByIdAndUpdate(question, {
       $push: { answers: newAnswer._id },
     });
-    newAnswer.save();
     revalidatePath(path);
     return newAnswer;
   } catch (error) {
@@ -34,11 +33,18 @@ export const getAnswerByQuestionId = async (params: GetAnswersParams) => {
   try {
     const answers = await Answer.find({
       question: questionId,
-    }).populate({
-      path: "author",
-      model: "User",
-      select: "_id clerkId picture name",
-    });
+    })
+      .populate({
+        path: "author",
+        model: "User",
+        select: "_id clerkId picture name",
+      })
+      .sort({
+        createdAt: -1,
+      });
+    return {
+      answers,
+    };
   } catch (error) {
     console.log(error);
     throw error;
