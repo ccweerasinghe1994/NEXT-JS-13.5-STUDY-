@@ -4,11 +4,13 @@ import { connectToDatabase } from "@/lib/mogoose";
 import Question from "@/database/question.model";
 import Tag, { ITag } from "@/database/tag.model";
 import {
+  GetQuestionByIdParams,
   ICreateQuestionParams,
   IGetQuestionsParams,
 } from "@/lib/actions/shared";
-import User from "@/database/user.model";
+import User, { IUser } from "@/database/user.model";
 import { revalidatePath } from "next/cache";
+import { ObjectId } from "mongoose";
 
 export async function createQuestion(params: ICreateQuestionParams) {
   try {
@@ -74,3 +76,39 @@ export async function getQuestions(params: IGetQuestionsParams) {
     throw error;
   }
 }
+
+export const getQuestionById = async (
+  params: GetQuestionByIdParams,
+): Promise<{
+  question: {
+    _id: ObjectId;
+    views: number;
+    title: string;
+    upvotes: any;
+    downvotes: any;
+    author: IUser;
+    tags: ITag[];
+    answers: any;
+    createdAt: Date;
+    content: string;
+  };
+}> => {
+  const { questionId } = params;
+  try {
+    const result = await Question.findById(questionId)
+      .populate({
+        path: "tags",
+        model: Tag,
+        select: "_id name",
+      })
+      .populate({
+        path: "author",
+        model: User,
+        select: "_id name picture clerkId",
+      });
+    return { question: result };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
