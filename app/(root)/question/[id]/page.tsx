@@ -7,6 +7,8 @@ import ParseHTML from "@/components/shared/parseHtml/ParseHTML";
 import RenderTag from "@/components/shared/tags/RenderTag";
 import { FC } from "react";
 import Answer from "@/components/forms/Answer";
+import { auth } from "@clerk/nextjs";
+import { getUserById } from "@/lib/actions/user.action";
 
 type TPageProps = {
   params: {
@@ -16,7 +18,11 @@ type TPageProps = {
 
 const Page: FC<TPageProps> = async ({ params }) => {
   const { question } = await getQuestionById({ questionId: params.id });
-
+  const { userId: clerkId } = auth();
+  let mongoUser;
+  if (clerkId) {
+    mongoUser = await getUserById({ userId: clerkId });
+  }
   return (
     <>
       <div className="flex-start w-full flex-col">
@@ -71,7 +77,11 @@ const Page: FC<TPageProps> = async ({ params }) => {
           <RenderTag key={tag._id} _id={tag._id} name={tag.name} />
         ))}
       </div>
-      <Answer />
+      <Answer
+        question={question.content}
+        questionId={JSON.stringify(question._id)}
+        authorId={JSON.stringify(mongoUser?._id ?? "")}
+      />
     </>
   );
 };
