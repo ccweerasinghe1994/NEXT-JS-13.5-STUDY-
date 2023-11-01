@@ -18,7 +18,9 @@ const LeftSideBar = () => {
         {sidebarLinks.map((link) => {
           const isActive =
             pathName === link.route ||
-            (pathName.includes(link.route) && link.route.length > 0);
+            (pathName.includes(link.route) &&
+              link.route.length > 0 &&
+              link.route !== "/");
           return (
             <div key={link.route}>
               <Link
