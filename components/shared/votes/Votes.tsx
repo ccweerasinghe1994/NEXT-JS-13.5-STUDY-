@@ -3,6 +3,11 @@ import { FC } from "react";
 import { ObjectId } from "mongoose";
 import Image from "next/image";
 import { formatNumber } from "@/lib/utils";
+import {
+  downVoteQuestion,
+  upVoteQuestion,
+} from "@/lib/actions/question.action";
+import { usePathname } from "next/navigation";
 
 type TVotesProps = {
   type: "question" | "answer";
@@ -24,8 +29,51 @@ const Votes: FC<TVotesProps> = ({
   hasSaved,
   userId,
 }) => {
+  const pathName = usePathname();
   const handleSave = () => {};
-  const handleVote = (type: "upvote" | "downVote") => {};
+  const handleVote = async (action: "upvote" | "downVote") => {
+    if (!userId) return;
+
+    if (action === "upvote") {
+      if (type === "question") {
+        await upVoteQuestion({
+          questionId: itemId,
+          userId,
+          hasUpVoted,
+          hasDownVoted,
+          path: pathName,
+        });
+      } else if (type === "answer") {
+        // await upVoteAnswer({
+        //   questionId: itemId,
+        //   userId,
+        //   hasUpVoted,
+        //   hasDownVoted,
+        //   path: pathName,
+        // });
+      }
+    }
+
+    if (action === "downVote") {
+      if (type === "question") {
+        await downVoteQuestion({
+          questionId: itemId,
+          userId,
+          hasUpVoted,
+          hasDownVoted,
+          path: pathName,
+        });
+      } else if (type === "answer") {
+        // await downVoteAnswer({
+        //   questionId: itemId,
+        //   userId,
+        //   hasUpVoted,
+        //   hasDownVoted,
+        //   path: pathName,
+        // });
+      }
+    }
+  };
   return (
     <div className={"flex gap-5"}>
       <div className="flex-center gap-2.5">
