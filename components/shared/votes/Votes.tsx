@@ -8,6 +8,7 @@ import {
   upVoteQuestion,
 } from "@/lib/actions/question.action";
 import { usePathname } from "next/navigation";
+import { downVoteAnswer, upVoteAnswer } from "@/lib/actions/answer.action";
 
 type TVotesProps = {
   type: "question" | "answer";
@@ -17,7 +18,7 @@ type TVotesProps = {
   hasUpVoted: boolean;
   downVotes: number;
   hasDownVoted: boolean;
-  hasSaved: boolean;
+  hasSaved?: boolean;
 };
 const Votes: FC<TVotesProps> = ({
   hasUpVoted,
@@ -44,13 +45,13 @@ const Votes: FC<TVotesProps> = ({
           path: pathName,
         });
       } else if (type === "answer") {
-        // await upVoteAnswer({
-        //   questionId: itemId,
-        //   userId,
-        //   hasUpVoted,
-        //   hasDownVoted,
-        //   path: pathName,
-        // });
+        await upVoteAnswer({
+          answerId: itemId,
+          userId,
+          hasUpVoted,
+          hasDownVoted,
+          path: pathName,
+        });
       }
     }
 
@@ -64,13 +65,13 @@ const Votes: FC<TVotesProps> = ({
           path: pathName,
         });
       } else if (type === "answer") {
-        // await downVoteAnswer({
-        //   questionId: itemId,
-        //   userId,
-        //   hasUpVoted,
-        //   hasDownVoted,
-        //   path: pathName,
-        // });
+        await downVoteAnswer({
+          answerId: itemId,
+          userId,
+          hasUpVoted,
+          hasDownVoted,
+          path: pathName,
+        });
       }
     }
   };
@@ -116,18 +117,20 @@ const Votes: FC<TVotesProps> = ({
           </div>
         </div>
       </div>
-      <Image
-        src={
-          hasSaved
-            ? "/assets/icons/start-filled.svg"
-            : "/assets/icons/star-red.svg"
-        }
-        alt={"upvote icon"}
-        width={18}
-        height={18}
-        className={"cursor-pointer"}
-        onClick={handleSave}
-      />
+      {type === "question" && (
+        <Image
+          src={
+            hasSaved
+              ? "/assets/icons/start-filled.svg"
+              : "/assets/icons/star-red.svg"
+          }
+          alt={"upvote icon"}
+          width={18}
+          height={18}
+          className={"cursor-pointer"}
+          onClick={handleSave}
+        />
+      )}
     </div>
   );
 };

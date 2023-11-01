@@ -1,6 +1,10 @@
 "use server";
 
-import { CreateAnswerParams, GetAnswersParams } from "@/lib/actions/shared";
+import {
+  AnswerVoteParams,
+  CreateAnswerParams,
+  GetAnswersParams,
+} from "@/lib/actions/shared";
 import { connectToDatabase } from "@/lib/mogoose";
 import { revalidatePath } from "next/cache";
 import Answer, { IAnswer } from "@/database/answer.model";
@@ -47,6 +51,64 @@ export const getAnswerByQuestionId = async (params: GetAnswersParams) => {
     };
   } catch (error) {
     console.log(error);
+    throw error;
+  }
+};
+
+export const upVoteAnswer = async (params: AnswerVoteParams) => {
+  try {
+    await connectToDatabase();
+    const { userId, path, answerId, hasUpVoted, hasDownVoted } = params;
+    let updateQuery: any = {};
+    if (hasUpVoted) {
+      updateQuery = { $pull: { upvotes: userId } };
+    } else if (hasDownVoted) {
+      updateQuery = {
+        $pull: { downvotes: userId },
+        $push: { upvotes: userId },
+      };
+    } else {
+      updateQuery = { $addToSet: { upvotes: userId } };
+    }
+    const answer = await Answer.findByIdAndUpdate(answerId, updateQuery, {
+      new: true,
+    });
+    if (!answer) {
+      throw new Error("Answer not found");
+    }
+
+    revalidatePath(path);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const downVoteAnswer = async (params: AnswerVoteParams) => {
+  try {
+    await connectToDatabase();
+    const { userId, path, answerId, hasUpVoted, hasDownVoted } = params;
+    let updateQuery: any = {};
+    if (hasDownVoted) {
+      updateQuery = { $pull: { downvotes: userId } };
+    } else if (hasUpVoted) {
+      updateQuery = {
+        $pull: { upvotes: userId },
+        $push: { downvotes: userId },
+      };
+    } else {
+      updateQuery = { $addToSet: { downvotes: userId } };
+    }
+    const answer = await Answer.findByIdAndUpdate(answerId, updateQuery, {
+      new: true,
+    });
+    if (!answer) {
+      throw new Error("Answer not found");
+    }
+
+    revalidatePath(path);
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 };

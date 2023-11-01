@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
 import ParseHTML from "../parseHtml/ParseHTML";
+import Votes from "@/components/shared/votes/Votes";
 
 type TAllAnswerProps = {
   questionId: ObjectId;
@@ -58,7 +59,17 @@ const AllAnswers: FC<TAllAnswerProps> = async ({
                   </div>
                 </Link>
               </div>
-              <div className="flex justify-end">VOTTING</div>
+              <div className="flex justify-end">
+                <Votes
+                  type={"answer"}
+                  itemId={answer._id}
+                  userId={userId}
+                  upvotes={answer.upvotes.length}
+                  hasUpVoted={answer.upvotes.includes(userId)}
+                  downVotes={answer.downvotes.length}
+                  hasDownVoted={answer.downvotes.includes(userId)}
+                />
+              </div>
             </div>
             <ParseHTML data={answer.content} />
           </article>
