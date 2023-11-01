@@ -7,6 +7,7 @@ import {
   GetQuestionByIdParams,
   ICreateQuestionParams,
   IGetQuestionsParams,
+  QuestionVoteParams,
 } from "@/lib/actions/shared";
 import User, { IUser } from "@/database/user.model";
 import { revalidatePath } from "next/cache";
@@ -95,6 +96,7 @@ export const getQuestionById = async (
 }> => {
   const { questionId } = params;
   try {
+    await connectToDatabase();
     const result = await Question.findById(questionId)
       .populate({
         path: "tags",
@@ -107,6 +109,64 @@ export const getQuestionById = async (
         select: "_id name picture clerkId",
       });
     return { question: result };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const upVoteQuestion = async (params: QuestionVoteParams) => {
+  try {
+    await connectToDatabase();
+    const { questionId, path, hasUpVoted, hasDownVoted, userId } = params;
+    let updateQuery: any = {};
+    if (hasUpVoted) {
+      updateQuery = { $pull: { upvotes: userId } };
+    } else if (hasDownVoted) {
+      updateQuery = {
+        $pull: { downvotes: userId },
+        $push: { upvotes: userId },
+      };
+    } else {
+      updateQuery = { $addToSet: { upvotes: userId } };
+    }
+    const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
+      new: true,
+    });
+    if (!question) {
+      throw new Error("Question not found");
+    }
+
+    revalidatePath(path);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const downVoteQuestion = async (params: QuestionVoteParams) => {
+  try {
+    await connectToDatabase();
+    const { questionId, path, hasUpVoted, hasDownVoted, userId } = params;
+    let updateQuery: any = {};
+    if (hasDownVoted) {
+      updateQuery = { $pull: { downvotes: userId } };
+    } else if (hasUpVoted) {
+      updateQuery = {
+        $pull: { upvotes: userId },
+        $push: { downvotes: userId },
+      };
+    } else {
+      updateQuery = { $addToSet: { downvotes: userId } };
+    }
+    const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
+      new: true,
+    });
+    if (!question) {
+      throw new Error("Question not found");
+    }
+
+    revalidatePath(path);
   } catch (error) {
     console.error(error);
     throw error;
