@@ -9,7 +9,7 @@ type TRenderTagsProps = {
   showCount?: boolean;
 };
 
-const RenderTags: FC<TRenderTagsProps> = ({
+const RenderTag: FC<TRenderTagsProps> = ({
   name,
   totalQuestions,
   showCount,
@@ -31,4 +31,4 @@ const RenderTags: FC<TRenderTagsProps> = ({
   );
 };
 
-export default RenderTags;
+export default RenderTag;

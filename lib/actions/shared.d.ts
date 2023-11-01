@@ -1,5 +1,5 @@
-import { Schema } from "mongoose";
 import { IUser } from "@/database/user.model";
+import { ObjectId, Schema } from "mongoose";
 
 export interface IGetQuestionsParams {
   page?: number;
@@ -24,17 +24,17 @@ export interface CreateAnswerParams {
 }
 
 export interface GetAnswersParams {
-  questionId: string;
+  questionId: ObjectId;
   sortBy?: string;
   page?: number;
   pageSize?: number;
 }
 
 export interface AnswerVoteParams {
-  answerId: string;
-  userId: string;
-  hasupVoted: boolean;
-  hasdownVoted: boolean;
+  answerId: ObjectId;
+  userId: ObjectId;
+  hasUpVoted: boolean;
+  hasDownVoted: boolean;
   path: string;
 }
 export interface DeleteAnswerParams {
@@ -76,10 +76,10 @@ export interface GetQuestionByIdParams {
   questionId: string;
 }
 export interface QuestionVoteParams {
-  questionId: string;
-  userId: string;
-  hasupVoted: boolean;
-  hasdownVoted: boolean;
+  questionId: ObjectId;
+  userId: ObjectId;
+  hasUpVoted: boolean;
+  hasDownVoted: boolean;
   path: string;
 }
 export interface DeleteQuestionParams {

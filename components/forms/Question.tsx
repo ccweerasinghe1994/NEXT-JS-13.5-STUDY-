@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { createQuestion } from "@/lib/actions/question.action";
 import { usePathname, useRouter } from "next/navigation";
+import { useTheme } from "@/context/ThemeProvider";
 
 type TQuestionProps = {
   mongoUserId: string;
@@ -27,6 +28,7 @@ type TQuestionProps = {
 const formType = "edit";
 
 const Question: FC<TQuestionProps> = ({ mongoUserId }) => {
+  const { theme } = useTheme();
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const editorRef = useRef(null);
   const router = useRouter();
@@ -180,6 +182,8 @@ const Question: FC<TQuestionProps> = ({ mongoUserId }) => {
                       "bold italic forecolor | alignleft aligncenter " +
                       "alignright alignjustify | bullist numlist",
                     content_style: "body { font-family:Inter; font-size:16px }",
+                    skin: theme === "dark" ? "oxide-dark" : "oxide",
+                    content_css: theme === "dark" ? "dark" : "default",
                   }}
                 />
               </FormControl>

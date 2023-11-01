@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import RenderTags from "@/components/shared/tags/RenderTags";
+import RenderTag from "@/components/shared/tags/RenderTag";
 
 const hotQuestions = [
   {
@@ -81,7 +81,7 @@ const RightSideBar = () => {
         <div className="mt-7 flex flex-col gap-4">
           {popluarTags.map((tag) => {
             return (
-              <RenderTags
+              <RenderTag
                 _id={tag._id}
                 totalQuestions={tag.totalQuestions}
                 name={tag.title}
