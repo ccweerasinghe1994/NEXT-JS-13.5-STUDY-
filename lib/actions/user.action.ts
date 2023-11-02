@@ -6,6 +6,7 @@ import {
   DeleteUserParams,
   GetAllUsersParams,
   GetSavedQuestionsParams,
+  GetUserByIdParams,
   ICreateUserParams,
   ToggleSaveQuestionParams,
   UpdateUserParams,
@@ -14,6 +15,7 @@ import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
 import { throwError } from "@/lib/utils";
+import Answer from "@/database/answer.model";
 
 type TGetUserById = {
   userId: string;
@@ -188,6 +190,29 @@ export const getSavedQuestion = async (params: GetSavedQuestionsParams) => {
     return {
       questions: savedQuestions,
     };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const getUserInfo = async (params: GetUserByIdParams) => {
+  try {
+    const { userId } = params;
+    await connectToDatabase();
+    const user = await User.findOne({
+      clerkId: userId,
+    });
+    if (!user) {
+      throwError("User not found");
+    }
+    const totalQuestions = await Question.countDocuments({
+      author: user._id,
+    });
+    const totalAnswers = await Answer.countDocuments({
+      author: user._id,
+    });
+    return { user, totalQuestions, totalAnswers };
   } catch (error) {
     console.error(error);
     throw error;

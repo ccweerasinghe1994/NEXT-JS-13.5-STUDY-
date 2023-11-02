@@ -3,11 +3,12 @@ import { usePathname } from "next/navigation";
 import { sidebarLinks } from "@/constants";
 import Link from "next/link";
 import Image from "next/image";
-import { SignedOut } from "@clerk/nextjs";
+import { SignedOut, useAuth } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 
 const LeftSideBar = () => {
   const pathName = usePathname();
+  const { userId } = useAuth();
   return (
     <section
       className={
@@ -19,6 +20,13 @@ const LeftSideBar = () => {
           const isActive =
             pathName === link.route ||
             (pathName.includes(link.route) && link.route.length > 1);
+          if (link.route === "/profile") {
+            if (userId) {
+              link.route = `/profile/${userId}`;
+            } else {
+              return null;
+            }
+          }
           return (
             <div key={link.route}>
               <Link
