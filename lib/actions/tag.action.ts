@@ -20,7 +20,7 @@ export const getTopInteractiveTags = async (
     await connectToDatabase();
     const user = await User.findById(userId);
     if (!user) {
-      throw new Error("User not found");
+      throwError("User not found");
     }
     // find interactions for user and group by tags...
     //   Interactions
