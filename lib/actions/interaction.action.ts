@@ -4,7 +4,6 @@ import { ViewQuestionParams } from "@/lib/actions/shared";
 import { connectToDatabase } from "@/lib/mogoose";
 import Question from "@/database/question.model";
 import Interaction from "@/database/interaction.model";
-import { revalidatePath } from "next/cache";
 
 export const viewQuestion = async (params: ViewQuestionParams) => {
   try {
@@ -26,7 +25,6 @@ export const viewQuestion = async (params: ViewQuestionParams) => {
         action: "view",
         question: questionId,
       });
-      revalidatePath("/");
     }
   } catch (e) {
     console.log(e);
