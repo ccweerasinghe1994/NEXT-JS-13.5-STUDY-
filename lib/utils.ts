@@ -47,5 +47,5 @@ export function formatNumber(num: number) {
 }
 
 export const throwError = (message: string) => {
-  throw new Error("User not found");
+  throw new Error(message);
 };
