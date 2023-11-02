@@ -21,6 +21,8 @@ const Metric: FC<TMetricProps> = ({
   isAuthor,
   href,
 }) => {
+  const FormattedViews =
+    title === " Views" && typeof value === "number" && value !== 0 && value / 2;
   const metric = (
     <>
       <Image
@@ -31,7 +33,9 @@ const Metric: FC<TMetricProps> = ({
         className={`object-contain ${href ? "rounded-full" : ""}`}
       />
       <p className={`${textStyles} flex items-center gap-1`}>
-        {typeof value === "number" ? formatNumber(value) : value}
+        {typeof value === "number"
+          ? formatNumber(FormattedViews || value)
+          : value}
         <span
           className={`small-regular line-clamp-1 ${
             isAuthor ? "max-sm:hidden" : ""

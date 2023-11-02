@@ -31,8 +31,8 @@ export interface GetAnswersParams {
 }
 
 export interface AnswerVoteParams {
-  answerId: ObjectId;
-  userId: ObjectId;
+  answerId: string;
+  userId: string;
   hasUpVoted: boolean;
   hasDownVoted: boolean;
   path: string;
@@ -76,8 +76,8 @@ export interface GetQuestionByIdParams {
   questionId: string;
 }
 export interface QuestionVoteParams {
-  questionId: ObjectId;
-  userId: ObjectId;
+  questionId: string;
+  userId: string;
   hasUpVoted: boolean;
   hasDownVoted: boolean;
   path: string;
@@ -130,8 +130,8 @@ export interface UpdateUserParams {
   path: string;
 }
 export interface ToggleSaveQuestionParams {
-  userId: ObjectId;
-  questionId: ObjectId;
+  userId: string;
+  questionId: string;
   path: string;
 }
 export interface GetSavedQuestionsParams {

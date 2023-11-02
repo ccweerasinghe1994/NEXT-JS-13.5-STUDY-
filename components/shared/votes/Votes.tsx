@@ -1,20 +1,20 @@
 "use client";
-import { FC } from "react";
-import { ObjectId } from "mongoose";
+import { FC, useEffect } from "react";
 import Image from "next/image";
 import { formatNumber } from "@/lib/utils";
 import {
   downVoteQuestion,
   upVoteQuestion,
 } from "@/lib/actions/question.action";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { downVoteAnswer, upVoteAnswer } from "@/lib/actions/answer.action";
 import { toggleSaveQuestion } from "@/lib/actions/user.action";
+import { viewQuestion } from "@/lib/actions/interaction.action";
 
 type TVotesProps = {
   type: "question" | "answer";
-  itemId: ObjectId;
-  userId: ObjectId;
+  itemId: string;
+  userId: string;
   upvotes: number;
   hasUpVoted: boolean;
   downVotes: number;
@@ -32,6 +32,7 @@ const Votes: FC<TVotesProps> = ({
   userId,
 }) => {
   const pathName = usePathname();
+  const router = useRouter();
   const handleSave = async () => {
     try {
       if (type !== "question") return;
@@ -88,6 +89,10 @@ const Votes: FC<TVotesProps> = ({
       }
     }
   };
+
+  useEffect(() => {
+    viewQuestion({ questionId: itemId, userId });
+  }, [itemId, userId, router, pathName]);
   return (
     <div className={"flex gap-5"}>
       <div className="flex-center gap-2.5">

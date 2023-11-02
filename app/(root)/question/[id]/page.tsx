@@ -47,12 +47,14 @@ const Page: FC<TPageProps> = async ({ params }) => {
           <div className="flex justify-end">
             <Votes
               type={"question"}
-              itemId={question._id}
-              userId={mongoUser?._id ?? ""}
+              itemId={question._id.toString()}
+              userId={mongoUser?._id.toString() ?? ""}
               upvotes={question.upvotes.length}
-              hasUpVoted={question.upvotes.includes(mongoUser?._id)}
+              hasUpVoted={question.upvotes.includes(mongoUser?._id.toString())}
               downVotes={question.downvotes.length}
-              hasDownVoted={question.downvotes.includes(mongoUser?._id)}
+              hasDownVoted={question.downvotes.includes(
+                mongoUser?._id.toString(),
+              )}
               hasSaved={mongoUser?.saved.includes(question?._id ?? "") ?? false}
             />
           </div>
