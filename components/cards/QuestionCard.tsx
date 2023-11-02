@@ -10,7 +10,7 @@ export type TQuestionCardProps = {
 };
 
 const QuestionCard: FC<TQuestionCardProps> = ({
-  question: { _id, author, tags, title, upVotes, views, createdAt, answers },
+  question: { _id, author, tags, title, upvotes, views, createdAt, answers },
 }) => {
   return (
     <div
@@ -53,14 +53,14 @@ const QuestionCard: FC<TQuestionCardProps> = ({
         <Metric
           imageUrl={"/assets/icons/like.svg"}
           alt={"message"}
-          value={upVotes}
+          value={upvotes.length}
           title={" Votes"}
           textStyles={"text-dark400_light800 small-medium"}
         />
         <Metric
           imageUrl={"/assets/icons/message.svg"}
           alt={"Upvotes"}
-          value={answers}
+          value={answers.length}
           title={" Answers"}
           textStyles={"text-dark400_light800 small-medium"}
         />

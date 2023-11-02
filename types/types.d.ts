@@ -1,4 +1,5 @@
 import { BADGE_CRITERIA } from "@/constants";
+import { ObjectId } from "mongoose";
 
 export interface SidebarLink {
   imgURL: string;
@@ -61,8 +62,8 @@ export type TQuestion = {
   title: string;
   tags: TTag[];
   author: TAuthor;
-  upVotes: number | string;
+  upvotes: [ObjectId];
   views: number;
-  answers: number;
+  answers: [ObjectId];
   createdAt: Date;
 };

@@ -62,8 +62,8 @@ const AllAnswers: FC<TAllAnswerProps> = async ({
               <div className="flex justify-end">
                 <Votes
                   type={"answer"}
-                  itemId={answer._id}
-                  userId={userId}
+                  itemId={answer._id.toString()}
+                  userId={userId.toString()}
                   upvotes={answer.upvotes.length}
                   hasUpVoted={answer.upvotes.includes(userId)}
                   downVotes={answer.downvotes.length}
