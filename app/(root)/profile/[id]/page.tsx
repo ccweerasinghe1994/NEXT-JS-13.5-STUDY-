@@ -9,6 +9,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { convertDate } from "@/lib/utils";
 import ProfileLink from "@/components/shared/profileLink/ProfileLink";
 import Stats from "@/components/shared/stats/Stats";
+import QuestionTab from "@/components/shared/tabs/QuestionTab";
+import AnswerTab from "@/components/shared/tabs/AnswerTab";
 
 const Page: FC<URLProps> = async ({ params, searchParams }) => {
   const result = await getUserInfo({ userId: params.id });
@@ -79,7 +81,10 @@ const Page: FC<URLProps> = async ({ params, searchParams }) => {
           </SignedIn>
         </div>
       </div>
-      <Stats />
+      <Stats
+        totalQuestions={result.totalQuestions}
+        totalAnswers={result.totalAnswers}
+      />
       <div className="mt-10 flex gap-10">
         <Tabs defaultValue="top-posts" className="flex-1">
           <TabsList className={"background-light800_dark400 min-h-[42px] p-1"}>
@@ -90,8 +95,12 @@ const Page: FC<URLProps> = async ({ params, searchParams }) => {
               Answers
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="top-posts">POSTS</TabsContent>
-          <TabsContent value="answers">ANSWERS</TabsContent>
+          <TabsContent value="top-posts">
+            <QuestionTab />
+          </TabsContent>
+          <TabsContent value="answers">
+            <AnswerTab />
+          </TabsContent>
         </Tabs>
       </div>
     </>
