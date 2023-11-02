@@ -6,6 +6,7 @@ import {
   DeleteUserParams,
   GetAllUsersParams,
   ICreateUserParams,
+  ToggleSaveQuestionParams,
   UpdateUserParams,
 } from "@/lib/actions/shared";
 import { revalidatePath } from "next/cache";
@@ -83,17 +84,6 @@ export const deleteUser = async (params: DeleteUserParams) => {
     throw error;
   }
 };
-
-// export const getAllUsers = async (params: GetAllUsersParams) => {
-//   try {
-//     const { page, pageSize, searchQuery, filter } = params;
-//     await connectToDatabase();
-//     return await User.find({});
-//   } catch (error) {
-//     console.error(error);
-//     throw error;
-//   }
-// };
 export const getAllUsers = async (params: GetAllUsersParams) => {
   try {
     const { page = 1, pageSize = 20, searchQuery, filter } = params;
@@ -111,3 +101,59 @@ export const getAllUsers = async (params: GetAllUsersParams) => {
     throw error;
   }
 };
+
+export const toggleSaveQuestion = async (params: ToggleSaveQuestionParams) => {
+  try {
+    const { userId, questionId, path } = params;
+    await connectToDatabase();
+    const user = await User.findById(userId);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const isSaved = user.saved.includes(questionId);
+    if (isSaved) {
+      // remove question from saved
+      await User.findByIdAndUpdate(
+        userId,
+        {
+          $pull: {
+            saved: questionId,
+          },
+        },
+        {
+          new: true,
+        },
+      );
+    } else {
+      // add question to saved
+      await User.findByIdAndUpdate(
+        userId,
+        {
+          $addToSet: {
+            saved: questionId,
+          },
+        },
+        {
+          new: true,
+        },
+      );
+    }
+    revalidatePath(path);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// export const getAllUsers = async (params: GetAllUsersParams) => {
+//   try {
+//     const { page, pageSize, searchQuery, filter } = params;
+//     await connectToDatabase();
+//     return await User.find({});
+//   } catch (error) {
+//     console.error(error);
+//     throw error;
+//   }
+// };

@@ -9,6 +9,7 @@ import {
 } from "@/lib/actions/question.action";
 import { usePathname } from "next/navigation";
 import { downVoteAnswer, upVoteAnswer } from "@/lib/actions/answer.action";
+import { toggleSaveQuestion } from "@/lib/actions/user.action";
 
 type TVotesProps = {
   type: "question" | "answer";
@@ -31,7 +32,19 @@ const Votes: FC<TVotesProps> = ({
   userId,
 }) => {
   const pathName = usePathname();
-  const handleSave = () => {};
+  const handleSave = async () => {
+    try {
+      if (type !== "question") return;
+      await toggleSaveQuestion({
+        questionId: itemId,
+        userId,
+        path: pathName,
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
   const handleVote = async (action: "upvote" | "downVote") => {
     if (!userId) return;
 
@@ -121,7 +134,7 @@ const Votes: FC<TVotesProps> = ({
         <Image
           src={
             hasSaved
-              ? "/assets/icons/start-filled.svg"
+              ? "/assets/icons/star-filled.svg"
               : "/assets/icons/star-red.svg"
           }
           alt={"upvote icon"}

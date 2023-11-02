@@ -130,8 +130,8 @@ export interface UpdateUserParams {
   path: string;
 }
 export interface ToggleSaveQuestionParams {
-  userId: string;
-  questionId: string;
+  userId: ObjectId;
+  questionId: ObjectId;
   path: string;
 }
 export interface GetSavedQuestionsParams {
