@@ -15,7 +15,7 @@ const QuestionCard: FC<TQuestionCardProps> = ({
   return (
     <div
       className={
-        "card-wrapper rounded-[10px] border-2 p-9 dark:border-none sm:px-11"
+        "card-wrapper rounded-[10px] border border-slate-500/10 p-9 dark:border-none sm:px-11"
       }
     >
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
