@@ -49,3 +49,10 @@ export function formatNumber(num: number) {
 export const throwError = (message: string) => {
   throw new Error(message);
 };
+
+export const convertDate = (date: Date) => {
+  return date.toLocaleString("default", {
+    month: "long",
+    year: "numeric",
+  });
+};

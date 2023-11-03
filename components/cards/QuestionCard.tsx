@@ -7,15 +7,17 @@ import { getTimStamp } from "@/lib/utils";
 
 export type TQuestionCardProps = {
   question: TQuestion;
+  clerkId?: string | null;
 };
 
 const QuestionCard: FC<TQuestionCardProps> = ({
   question: { _id, author, tags, title, upvotes, views, createdAt, answers },
+  clerkId,
 }) => {
   return (
     <div
       className={
-        "card-wrapper rounded-[10px] border border-slate-500/10 p-9 dark:border-none sm:px-11"
+        "card-wrapper my-2 rounded-[10px] border border-slate-500/10 p-9 dark:border-none sm:px-11"
       }
     >
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
