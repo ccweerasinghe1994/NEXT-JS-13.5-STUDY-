@@ -59,9 +59,9 @@ const Question: FC<TQuestionProps> = ({
   const form = useForm<TQuestionsSchema>({
     resolver: zodResolver(QuestionsSchema),
     defaultValues: {
-      title: parsedQuestionDetails.title || "",
-      explanation: parsedQuestionDetails.content || "",
-      tags: parsedQuestionDetails.tags.map((item) => item.name) || [],
+      title: parsedQuestionDetails?.title || "",
+      explanation: parsedQuestionDetails?.content || "",
+      tags: parsedQuestionDetails?.tags?.map((item) => item.name) || [],
     },
   });
   // const log = () => {
