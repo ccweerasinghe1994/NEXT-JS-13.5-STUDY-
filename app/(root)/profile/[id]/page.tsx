@@ -96,10 +96,18 @@ const Page: FC<URLProps> = async ({ params, searchParams }) => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="top-posts">
-            <QuestionTab />
+            <QuestionTab
+              userId={result.user._id}
+              searchParams={searchParams}
+              clerkId={clerkId}
+            />
           </TabsContent>
           <TabsContent value="answers">
-            <AnswerTab />
+            <AnswerTab
+              userId={result.user._id}
+              searchParams={searchParams}
+              clerkId={clerkId}
+            />
           </TabsContent>
         </Tabs>
       </div>

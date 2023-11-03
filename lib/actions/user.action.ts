@@ -7,6 +7,7 @@ import {
   GetAllUsersParams,
   GetSavedQuestionsParams,
   GetUserByIdParams,
+  GetUserStatsParams,
   ICreateUserParams,
   ToggleSaveQuestionParams,
   UpdateUserParams,
@@ -16,6 +17,7 @@ import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
 import { throwError } from "@/lib/utils";
 import Answer from "@/database/answer.model";
+import { TQuestion } from "@/types/types";
 
 type TGetUserById = {
   userId: string;
@@ -213,6 +215,41 @@ export const getUserInfo = async (params: GetUserByIdParams) => {
       author: user._id,
     });
     return { user, totalQuestions, totalAnswers };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const getUserQuestions = async (params: GetUserStatsParams) => {
+  try {
+    await connectToDatabase();
+    const { page, pageSize, userId } = params;
+    const totalQuestions = await Question.countDocuments({
+      author: userId,
+    });
+
+    const userQuestions: TQuestion[] = await Question.find({
+      author: userId,
+    })
+      .sort({
+        views: -1,
+        upvotes: -1,
+      })
+      .populate({
+        path: "tags",
+        model: Tag,
+        select: "name _id",
+      })
+      .populate({
+        path: "author",
+        model: User,
+        select: "name _id picture clerkId",
+      });
+    return {
+      totalQuestions,
+      questions: userQuestions,
+    };
   } catch (error) {
     console.error(error);
     throw error;

@@ -7,10 +7,12 @@ import { getTimStamp } from "@/lib/utils";
 
 export type TQuestionCardProps = {
   question: TQuestion;
+  clerkId?: string | null;
 };
 
 const QuestionCard: FC<TQuestionCardProps> = ({
   question: { _id, author, tags, title, upvotes, views, createdAt, answers },
+  clerkId,
 }) => {
   return (
     <div
