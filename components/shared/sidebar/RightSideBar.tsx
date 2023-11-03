@@ -1,48 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import RenderTag from "@/components/shared/tags/RenderTag";
+import { getHotQuestions } from "@/lib/actions/question.action";
+import { getPopularTags } from "@/lib/actions/tag.action";
 
-const hotQuestions = [
-  {
-    _id: 1,
-    title: "How to use React Query?",
-  },
-  {
-    _id: 2,
-    title: "How to use useEffect?",
-  },
-  {
-    _id: 3,
-    title: "How to use useState?",
-  },
-  {
-    _id: 4,
-    title: "How to use React Query?",
-  },
-  {
-    _id: 5,
-    title: "How to use useEffect?",
-  },
-];
+const RightSideBar = async () => {
+  const hotQuestions = await getHotQuestions();
+  const popularTags = await getPopularTags();
 
-const popluarTags = [
-  {
-    _id: 1,
-    title: "React",
-    totalQuestions: 100,
-  },
-  {
-    _id: 2,
-    title: "Next.js",
-    totalQuestions: 42,
-  },
-  {
-    _id: 3,
-    title: "React Query",
-    totalQuestions: 10,
-  },
-];
-const RightSideBar = () => {
   return (
     <section
       className={
@@ -56,7 +21,7 @@ const RightSideBar = () => {
             return (
               <Link
                 key={question._id}
-                href={`/questions/${question._id}`}
+                href={`/question/${question._id}`}
                 className={
                   "flex cursor-pointer items-center  justify-between gap-7"
                 }
@@ -79,12 +44,12 @@ const RightSideBar = () => {
       <div className="mt-16">
         <h3 className="h3-bold text-dark300_light900">Popular Tags</h3>
         <div className="mt-7 flex flex-col gap-4">
-          {popluarTags.map((tag) => {
+          {popularTags.map((tag) => {
             return (
               <RenderTag
                 _id={tag._id}
-                totalQuestions={tag.totalQuestions}
-                name={tag.title}
+                totalQuestions={tag.numberOsQuestions}
+                name={tag.name}
                 showCount
                 key={tag._id}
               />

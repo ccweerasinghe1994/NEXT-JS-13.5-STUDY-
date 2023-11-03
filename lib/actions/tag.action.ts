@@ -103,3 +103,20 @@ export const getQuestionByTagId = async (params: GetQuestionsByTagIdParams) => {
     throw e;
   }
 };
+
+export const getPopularTags = async () => {
+  try {
+    await connectToDatabase();
+    const tags = await Tag.aggregate([
+      {
+        $project: { name: 1, numberOsQuestions: { $size: "$questions" } },
+      },
+      { $sort: { numberOsQuestions: -1 } },
+      { $limit: 10 },
+    ]);
+    return tags;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
