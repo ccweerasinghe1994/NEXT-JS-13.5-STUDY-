@@ -225,6 +225,7 @@ export const getUserQuestions = async (params: GetUserStatsParams) => {
   try {
     await connectToDatabase();
     const { page, pageSize, userId } = params;
+    console.log(page, pageSize, userId);
     const totalQuestions = await Question.countDocuments({
       author: userId,
     });
@@ -260,6 +261,7 @@ export const getUserAnswers = async (params: GetUserStatsParams) => {
   try {
     await connectToDatabase();
     const { page, pageSize, userId } = params;
+    console.log(page, pageSize, userId);
     const totalAnswers = await Answer.countDocuments({
       author: userId,
     });
