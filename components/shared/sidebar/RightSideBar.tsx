@@ -4,27 +4,10 @@ import RenderTag from "@/components/shared/tags/RenderTag";
 import { getHotQuestions } from "@/lib/actions/question.action";
 import { getPopularTags } from "@/lib/actions/tag.action";
 
-const popluarTags = [
-  {
-    _id: 1,
-    title: "React",
-    totalQuestions: 100,
-  },
-  {
-    _id: 2,
-    title: "Next.js",
-    totalQuestions: 42,
-  },
-  {
-    _id: 3,
-    title: "React Query",
-    totalQuestions: 10,
-  },
-];
 const RightSideBar = async () => {
   const hotQuestions = await getHotQuestions();
-  const popluarTags = await getPopularTags();
-  console.log(popluarTags);
+  const popularTags = await getPopularTags();
+
   return (
     <section
       className={
@@ -61,7 +44,7 @@ const RightSideBar = async () => {
       <div className="mt-16">
         <h3 className="h3-bold text-dark300_light900">Popular Tags</h3>
         <div className="mt-7 flex flex-col gap-4">
-          {popluarTags.map((tag) => {
+          {popularTags.map((tag) => {
             return (
               <RenderTag
                 _id={tag._id}
