@@ -4,6 +4,8 @@ import { connectToDatabase } from "@/lib/mogoose";
 import Question from "@/database/question.model";
 import Tag, { ITag } from "@/database/tag.model";
 import {
+  DeleteQuestionParams,
+  EditQuestionParams,
   GetQuestionByIdParams,
   ICreateQuestionParams,
   IGetQuestionsParams,
@@ -12,6 +14,9 @@ import {
 import User, { IUser } from "@/database/user.model";
 import { revalidatePath } from "next/cache";
 import { ObjectId } from "mongoose";
+import Answer from "@/database/answer.model";
+import Interaction from "@/database/interaction.model";
+import { throwError } from "@/lib/utils";
 
 export async function createQuestion(params: ICreateQuestionParams) {
   try {
@@ -78,9 +83,7 @@ export async function getQuestions(params: IGetQuestionsParams) {
   }
 }
 
-export const getQuestionById = async (
-  params: GetQuestionByIdParams,
-): Promise<{
+export type TGetQuestionsByTagParams = {
   question: {
     _id: ObjectId;
     views: number;
@@ -93,7 +96,10 @@ export const getQuestionById = async (
     createdAt: Date;
     content: string;
   };
-}> => {
+};
+export const getQuestionById = async (
+  params: GetQuestionByIdParams,
+): Promise<TGetQuestionsByTagParams> => {
   const { questionId } = params;
   try {
     await connectToDatabase();
@@ -170,5 +176,55 @@ export const downVoteQuestion = async (params: QuestionVoteParams) => {
   } catch (error) {
     console.error(error);
     throw error;
+  }
+};
+
+export const deleteQuestion = async (params: DeleteQuestionParams) => {
+  try {
+    await connectToDatabase();
+    const { questionId, path } = params;
+
+    await Question.deleteOne({ _id: questionId });
+    // delete answers associated with the question
+    await Answer.deleteMany({ question: questionId });
+
+    await Interaction.deleteMany({ question: questionId });
+
+    await Tag.updateMany(
+      {
+        questions: questionId,
+      },
+      {
+        $pull: {
+          questions: questionId,
+        },
+      },
+    );
+    revalidatePath(path);
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
+export const editQuestion = async (params: EditQuestionParams) => {
+  try {
+    await connectToDatabase();
+    const { title, content, questionId, path } = params;
+    const question = await Question.findById(questionId);
+
+    if (!question) {
+      throwError("Question not found");
+    }
+
+    question.title = title;
+    question.content = content;
+
+    await question.save();
+
+    revalidatePath(path);
+  } catch (e) {
+    console.error(e);
+    throw e;
   }
 };

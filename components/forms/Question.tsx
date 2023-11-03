@@ -17,28 +17,51 @@ import { QuestionsSchema, TQuestionsSchema } from "@/lib/validations";
 import { Editor } from "@tinymce/tinymce-react";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
-import { createQuestion } from "@/lib/actions/question.action";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "@/context/ThemeProvider";
+import { ObjectId } from "mongoose";
+import { IUser } from "@/database/user.model";
+import { ITag } from "@/database/tag.model";
 
 type TQuestionProps = {
   mongoUserId: string;
+  type?: "edit";
+  questionDetails?: string;
 };
 
 const formType = "edit";
 
-const Question: FC<TQuestionProps> = ({ mongoUserId }) => {
+const Question: FC<TQuestionProps> = ({
+  mongoUserId,
+  questionDetails,
+  type,
+}) => {
   const { theme } = useTheme();
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const editorRef = useRef(null);
   const router = useRouter();
   const pathName = usePathname();
+
+  const parsedQuestionDetails: {
+    _id: ObjectId;
+    views: number;
+    title: string;
+    upvotes: any;
+    downvotes: any;
+    author: IUser;
+    tags: ITag[];
+    answers: any;
+    createdAt: Date;
+    content: string;
+  } = JSON.parse(questionDetails || "{}");
+  console.log(parsedQuestionDetails.tags);
   const form = useForm<TQuestionsSchema>({
     resolver: zodResolver(QuestionsSchema),
     defaultValues: {
-      title: "",
-      explanation: "",
-      tags: [],
+      title: parsedQuestionDetails?.title || "",
+      explanation: parsedQuestionDetails?.content || "",
+      tags: parsedQuestionDetails?.tags?.map((item) => item.name) || [],
     },
   });
   // const log = () => {
@@ -53,14 +76,24 @@ const Question: FC<TQuestionProps> = ({ mongoUserId }) => {
     try {
       console.log(values);
       console.log("mongoUserId", mongoUserId);
-      await createQuestion({
-        title: values.title,
-        content: values.explanation,
-        tags: values.tags,
-        author: JSON.parse(mongoUserId),
-        path: pathName,
-      });
-      router.push("/");
+      if (formType === "edit") {
+        await editQuestion({
+          title: values.title,
+          content: values.explanation,
+          path: pathName,
+          questionId: parsedQuestionDetails._id.toString(),
+        });
+        router.push(`/question/${parsedQuestionDetails._id}`);
+      } else {
+        await createQuestion({
+          title: values.title,
+          content: values.explanation,
+          tags: values.tags,
+          author: JSON.parse(mongoUserId),
+          path: pathName,
+        });
+        router.push("/");
+      }
     } catch (error) {
     } finally {
       setIsFormSubmitting(false);
@@ -97,6 +130,7 @@ const Question: FC<TQuestionProps> = ({ mongoUserId }) => {
     tag: string,
     field: ControllerRenderProps<TQuestionsSchema, "tags">,
   ) => {
+    if (type === "edit") return;
     const newTags = field.value.filter((t) => t !== tag);
     form.setValue("tags", newTags);
   };
@@ -158,7 +192,7 @@ const Question: FC<TQuestionProps> = ({ mongoUserId }) => {
                   }}
                   onBlur={field.onBlur}
                   onEditorChange={(content) => field.onChange(content)}
-                  initialValue=""
+                  initialValue={parsedQuestionDetails.content || ""}
                   init={{
                     height: 350,
                     menubar: false,
@@ -213,6 +247,7 @@ const Question: FC<TQuestionProps> = ({ mongoUserId }) => {
               <FormControl className={"mt-3.5"}>
                 <>
                   <Input
+                    disabled={formType === "edit"}
                     className={
                       "no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
                     }
@@ -231,15 +266,17 @@ const Question: FC<TQuestionProps> = ({ mongoUserId }) => {
                             onClick={() => handleTagRemove(tag, field)}
                           >
                             {tag}
-                            <Image
-                              src={"/assets/icons/close.svg"}
-                              alt={"close icons"}
-                              width={16}
-                              height={16}
-                              className={
-                                "cursor-pointer object-contain invert-0 dark:invert"
-                              }
-                            />
+                            {type !== "edit" && (
+                              <Image
+                                src={"/assets/icons/close.svg"}
+                                alt={"close icons"}
+                                width={16}
+                                height={16}
+                                className={
+                                  "cursor-pointer object-contain invert-0 dark:invert"
+                                }
+                              />
+                            )}
                           </Badge>
                         );
                       })}

@@ -3,12 +3,15 @@
 import {
   AnswerVoteParams,
   CreateAnswerParams,
+  DeleteAnswerParams,
   GetAnswersParams,
 } from "@/lib/actions/shared";
 import { connectToDatabase } from "@/lib/mogoose";
 import { revalidatePath } from "next/cache";
 import Answer, { IAnswer } from "@/database/answer.model";
 import Question from "@/database/question.model";
+import { throwError } from "@/lib/utils";
+import Interaction from "@/database/interaction.model";
 
 export const createAnswer = async (params: CreateAnswerParams) => {
   const { content, author, question, path } = params;
@@ -110,5 +113,35 @@ export const downVoteAnswer = async (params: AnswerVoteParams) => {
   } catch (error) {
     console.error(error);
     throw error;
+  }
+};
+
+export const deleteAnswer = async (params: DeleteAnswerParams) => {
+  try {
+    await connectToDatabase();
+    const { answerId, path } = params;
+
+    const answer: IAnswer | null = await Answer.findById(answerId);
+
+    if (answer === null) {
+      throwError("Answer not found");
+      return;
+    }
+
+    await Answer.deleteOne({ _id: answerId });
+
+    await Question.updateMany(
+      { _id: answer.question },
+      {
+        $pull: { answers: answerId },
+      },
+    );
+
+    await Interaction.deleteMany({ answer: answerId });
+
+    revalidatePath(path);
+  } catch (e) {
+    console.error(e);
+    throw e;
   }
 };

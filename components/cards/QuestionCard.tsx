@@ -4,6 +4,8 @@ import Link from "next/link";
 import RenderTag from "@/components/shared/tags/RenderTag";
 import Metric from "@/components/shared/metric/Metric";
 import { getTimStamp } from "@/lib/utils";
+import { SignedIn } from "@clerk/nextjs";
+import EditDeleteAction from "@/components/shared/editDeleteAction/EditDeleteAction";
 
 export type TQuestionCardProps = {
   question: TQuestion;
@@ -14,6 +16,7 @@ const QuestionCard: FC<TQuestionCardProps> = ({
   question: { _id, author, tags, title, upvotes, views, createdAt, answers },
   clerkId,
 }) => {
+  const showActionButton = clerkId && clerkId === author.clerkId;
   return (
     <div
       className={
@@ -35,7 +38,11 @@ const QuestionCard: FC<TQuestionCardProps> = ({
             </h3>
           </Link>
         </div>
-        {/*  if signed in add edit delete actions */}
+        <SignedIn>
+          {showActionButton && (
+            <EditDeleteAction type={"question"} itemId={_id} />
+          )}
+        </SignedIn>
       </div>
       <div className="mt-3.5 flex flex-wrap gap-2">
         {tags.map((tag) => (
