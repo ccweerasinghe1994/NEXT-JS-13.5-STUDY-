@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import RenderTag from "@/components/shared/tags/RenderTag";
 import { getHotQuestions } from "@/lib/actions/question.action";
+import { getPopularTags } from "@/lib/actions/tag.action";
 
 const popluarTags = [
   {
@@ -22,6 +23,8 @@ const popluarTags = [
 ];
 const RightSideBar = async () => {
   const hotQuestions = await getHotQuestions();
+  const popluarTags = await getPopularTags();
+  console.log(popluarTags);
   return (
     <section
       className={
@@ -62,8 +65,8 @@ const RightSideBar = async () => {
             return (
               <RenderTag
                 _id={tag._id}
-                totalQuestions={tag.totalQuestions}
-                name={tag.title}
+                totalQuestions={tag.numberOsQuestions}
+                name={tag.name}
                 showCount
                 key={tag._id}
               />
