@@ -13,7 +13,7 @@ import {
 } from "@/lib/actions/shared";
 import User, { IUser } from "@/database/user.model";
 import { revalidatePath } from "next/cache";
-import { ObjectId } from "mongoose";
+import { FilterQuery, ObjectId } from "mongoose";
 import Answer from "@/database/answer.model";
 import Interaction from "@/database/interaction.model";
 import { throwError } from "@/lib/utils";
@@ -64,9 +64,19 @@ export async function createQuestion(params: ICreateQuestionParams) {
 }
 
 export async function getQuestions(params: IGetQuestionsParams) {
+  const { searchQuery } = params;
+
+  const query: FilterQuery<typeof Question> = {};
+
+  if (searchQuery) {
+    query.$or = [
+      { title: { $regex: new RegExp(searchQuery, "i") } },
+      { content: { $regex: new RegExp(searchQuery, "i") } },
+    ];
+  }
   try {
     await connectToDatabase();
-    const questions = await Question.find({})
+    const questions = await Question.find(query)
       .populate({
         path: "tags",
         model: Tag,
