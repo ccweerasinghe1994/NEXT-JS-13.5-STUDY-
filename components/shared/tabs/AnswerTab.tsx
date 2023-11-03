@@ -14,7 +14,6 @@ const AnswerTab: FC<TAnswerTabProps> = async ({
   userId,
 }) => {
   const result = await getUserAnswers({ userId, page: 1 });
-  console.log(result);
   return (
     <>
       {result.answers.map((answer) => {

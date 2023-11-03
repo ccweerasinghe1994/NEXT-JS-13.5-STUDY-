@@ -14,7 +14,6 @@ const EditDeleteAction: FC<TEditDeleteAction> = ({ itemId, type }) => {
   const pathName = usePathname();
   const router = useRouter();
   const handleEdit = () => {
-    console.log("edit");
     router.push(`/question/edit/${itemId}`);
   };
 

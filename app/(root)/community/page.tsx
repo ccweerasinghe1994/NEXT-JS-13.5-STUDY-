@@ -7,7 +7,6 @@ import UserCard from "@/components/cards/UserCard";
 
 const CommunityPage = async () => {
   const results = await getAllUsers({});
-  console.log(results);
   return (
     <>
       <h1 className={"h1-bold text-dark100_light900"}>All Users</h1>
