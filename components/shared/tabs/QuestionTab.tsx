@@ -14,7 +14,6 @@ const QuestionTab: FC<TQuestionTabProps> = async ({
   clerkId,
 }) => {
   const result = await getUserQuestions({ userId, page: 1 });
-  console.log(result);
   return (
     <div>
       {result.questions.map((question) => {

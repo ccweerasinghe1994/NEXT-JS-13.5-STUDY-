@@ -67,3 +67,20 @@ export type TQuestion = {
   answers: [ObjectId];
   createdAt: Date;
 };
+export type TAnswer = {
+  _id: string;
+  author: {
+    name: string;
+    picture: string;
+    _id: string;
+    clerkId: string;
+  };
+  question: {
+    title: string;
+    _id: string;
+  };
+  content: string;
+  upvotes: ObjectId[];
+  downvotes: ObjectId[];
+  createdAt: Date;
+};

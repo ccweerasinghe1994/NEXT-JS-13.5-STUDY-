@@ -17,7 +17,7 @@ import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
 import { throwError } from "@/lib/utils";
 import Answer from "@/database/answer.model";
-import { TQuestion } from "@/types/types";
+import { TAnswer, TQuestion } from "@/types/types";
 
 type TGetUserById = {
   userId: string;
@@ -249,6 +249,40 @@ export const getUserQuestions = async (params: GetUserStatsParams) => {
     return {
       totalQuestions,
       questions: userQuestions,
+    };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const getUserAnswers = async (params: GetUserStatsParams) => {
+  try {
+    await connectToDatabase();
+    const { page, pageSize, userId } = params;
+    const totalAnswers = await Answer.countDocuments({
+      author: userId,
+    });
+
+    const userAnswers: TAnswer[] = await Answer.find({
+      author: userId,
+    })
+      .sort({
+        upvotes: -1,
+      })
+      .populate({
+        path: "question",
+        model: Question,
+        select: "title _id",
+      })
+      .populate({
+        path: "author",
+        model: User,
+        select: "name _id picture clerkId",
+      });
+    return {
+      totalAnswers,
+      answers: userAnswers,
     };
   } catch (error) {
     console.error(error);

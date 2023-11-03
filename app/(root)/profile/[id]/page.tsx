@@ -102,7 +102,7 @@ const Page: FC<URLProps> = async ({ params, searchParams }) => {
               clerkId={clerkId}
             />
           </TabsContent>
-          <TabsContent value="answers">
+          <TabsContent value="answers" className={"flex w-full flex-col gap-6"}>
             <AnswerTab
               userId={result.user._id}
               searchParams={searchParams}
