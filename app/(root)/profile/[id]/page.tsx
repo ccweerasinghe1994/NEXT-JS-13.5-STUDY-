@@ -88,7 +88,7 @@ const Page: FC<URLProps> = async ({ params, searchParams }) => {
       <div className="mt-10 flex gap-10">
         <Tabs defaultValue="top-posts" className="flex-1">
           <TabsList className={"background-light800_dark400 min-h-[42px] p-1"}>
-            <TabsTrigger className={"tab"} value="top-posts">
+            <TabsTrigger autoFocus className={"tab "} value="top-posts">
               Top Posts
             </TabsTrigger>
             <TabsTrigger className={"tab"} value="answers">
