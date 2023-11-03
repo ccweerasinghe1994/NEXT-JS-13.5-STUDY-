@@ -1,7 +1,7 @@
 "use server";
 
 import { connectToDatabase } from "@/lib/mogoose";
-import Question from "@/database/question.model";
+import Question, { IQuestion } from "@/database/question.model";
 import Tag, { ITag } from "@/database/tag.model";
 import {
   DeleteQuestionParams,
@@ -225,6 +225,23 @@ export const editQuestion = async (params: EditQuestionParams) => {
     revalidatePath(path);
   } catch (e) {
     console.error(e);
+    throw e;
+  }
+};
+
+export const getHotQuestions = async () => {
+  try {
+    await connectToDatabase();
+
+    const questions = await Question.find({})
+      .sort({
+        views: -1,
+        upvotes: -1,
+      })
+      .limit(5);
+    return questions as IQuestion[];
+  } catch (e) {
+    console.log(e);
     throw e;
   }
 };

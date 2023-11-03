@@ -1,29 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import RenderTag from "@/components/shared/tags/RenderTag";
-
-const hotQuestions = [
-  {
-    _id: 1,
-    title: "How to use React Query?",
-  },
-  {
-    _id: 2,
-    title: "How to use useEffect?",
-  },
-  {
-    _id: 3,
-    title: "How to use useState?",
-  },
-  {
-    _id: 4,
-    title: "How to use React Query?",
-  },
-  {
-    _id: 5,
-    title: "How to use useEffect?",
-  },
-];
+import { getHotQuestions } from "@/lib/actions/question.action";
 
 const popluarTags = [
   {
@@ -42,7 +20,8 @@ const popluarTags = [
     totalQuestions: 10,
   },
 ];
-const RightSideBar = () => {
+const RightSideBar = async () => {
+  const hotQuestions = await getHotQuestions();
   return (
     <section
       className={
@@ -56,7 +35,7 @@ const RightSideBar = () => {
             return (
               <Link
                 key={question._id}
-                href={`/questions/${question._id}`}
+                href={`/question/${question._id}`}
                 className={
                   "flex cursor-pointer items-center  justify-between gap-7"
                 }
