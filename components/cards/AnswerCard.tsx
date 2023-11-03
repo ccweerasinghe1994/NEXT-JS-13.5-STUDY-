@@ -3,6 +3,8 @@ import Link from "next/link";
 import { TAnswer } from "@/types/types";
 import { getTimStamp } from "@/lib/utils";
 import Metric from "@/components/shared/metric/Metric";
+import { SignedIn } from "@clerk/nextjs";
+import EditDeleteAction from "@/components/shared/editDeleteAction/EditDeleteAction";
 
 type TAnswerCardProps = {
   answer: TAnswer;
@@ -13,6 +15,7 @@ const AnswerCard: FC<TAnswerCardProps> = ({
   answer: { content, createdAt, downvotes, _id, upvotes, question, author },
   clerkId,
 }) => {
+  const showActionButton = clerkId && clerkId === author.clerkId;
   return (
     <Link
       href={`/question/${question?._id}/#${_id}`}
@@ -31,6 +34,11 @@ const AnswerCard: FC<TAnswerCardProps> = ({
             {question.title}
           </h3>
         </div>
+        <SignedIn>
+          {showActionButton && (
+            <EditDeleteAction type={"answer"} itemId={_id} />
+          )}
+        </SignedIn>
       </div>
 
       <div className="flex-between mt-6 w-full flex-wrap gap-3">

@@ -55,10 +55,11 @@ export type TAuthor = {
   _id: number;
   name: string;
   picture: string;
+  clerkId: string;
 };
 
 export type TQuestion = {
-  _id: number;
+  _id: string;
   title: string;
   tags: TTag[];
   author: TAuthor;
@@ -67,6 +68,7 @@ export type TQuestion = {
   answers: [ObjectId];
   createdAt: Date;
 };
+
 export type TAnswer = {
   _id: string;
   author: {
