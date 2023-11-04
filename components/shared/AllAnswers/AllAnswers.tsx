@@ -21,9 +21,13 @@ const AllAnswers: FC<TAllAnswerProps> = async ({
   totalAnswers,
   userId,
   questionId,
+  page,
+  filter,
 }) => {
   const result = await getAnswerByQuestionId({
     questionId,
+    page: page || 1,
+    sortBy: filter,
   });
   const { answers } = result;
   return (

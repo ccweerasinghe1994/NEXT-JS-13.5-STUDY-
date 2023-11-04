@@ -11,14 +11,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
 import Votes from "@/components/shared/votes/Votes";
+import { URLProps } from "@/types/types";
 
-type TPageProps = {
-  params: {
-    id: string;
-  };
-};
-
-const Page: FC<TPageProps> = async ({ params }) => {
+const Page: FC<URLProps> = async ({ params, searchParams }) => {
   const { question } = await getQuestionById({ questionId: params.id });
   const { userId: clerkId } = auth();
   let mongoUser;
@@ -96,6 +91,8 @@ const Page: FC<TPageProps> = async ({ params }) => {
         questionId={question._id}
         userId={mongoUser?._id ?? ""}
         totalAnswers={question.answers.length}
+        page={Number(searchParams?.page)}
+        filter={searchParams?.filter}
       />
       <Answer
         question={question.content}

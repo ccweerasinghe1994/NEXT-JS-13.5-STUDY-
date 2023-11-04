@@ -12,6 +12,7 @@ import Answer, { IAnswer } from "@/database/answer.model";
 import Question from "@/database/question.model";
 import { throwError } from "@/lib/utils";
 import Interaction from "@/database/interaction.model";
+import { SortOrder } from "mongoose";
 
 export const createAnswer = async (params: CreateAnswerParams) => {
   const { content, author, question, path } = params;
@@ -34,8 +35,37 @@ export const createAnswer = async (params: CreateAnswerParams) => {
   }
 };
 
+type TAllAnswersSortBy = "highestUpvotes" | "lowestUpvotes" | "recent" | "old";
+
 export const getAnswerByQuestionId = async (params: GetAnswersParams) => {
-  const { questionId } = params;
+  const { questionId, sortBy } = params;
+
+  let sortObject: Partial<Record<keyof IAnswer, SortOrder>> = {};
+
+  switch (sortBy as TAllAnswersSortBy) {
+    case "highestUpvotes":
+      sortObject = {
+        upvotes: -1,
+      };
+      break;
+    case "lowestUpvotes":
+      sortObject = {
+        upvotes: 1,
+      };
+      break;
+    case "recent":
+      sortObject = {
+        createdAt: -1,
+      };
+      break;
+    case "old":
+      sortObject = {
+        createdAt: 1,
+      };
+      break;
+    default:
+      break;
+  }
 
   try {
     const answers = await Answer.find({
@@ -46,9 +76,7 @@ export const getAnswerByQuestionId = async (params: GetAnswersParams) => {
         model: "User",
         select: "_id clerkId picture name",
       })
-      .sort({
-        createdAt: -1,
-      });
+      .sort(sortObject);
     return {
       answers,
     };

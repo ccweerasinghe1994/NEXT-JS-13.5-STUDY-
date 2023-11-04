@@ -7,10 +7,10 @@ import {
   GetQuestionsByTagIdParams,
   GetTopInteractedTagsParams,
 } from "@/lib/actions/shared";
-import Tag from "@/database/tag.model";
+import Tag, { ITag } from "@/database/tag.model";
 import { FilterQuery } from "mongoose";
 import { throwError } from "@/lib/utils";
-import Question from "@/database/question.model";
+import Question, { IQuestion } from "@/database/question.model";
 
 export const getTopInteractiveTags = async (
   params: GetTopInteractedTagsParams,
@@ -47,7 +47,7 @@ export const getTopInteractiveTags = async (
 type TGetAllTags = "popular" | "recent" | "name" | "old";
 export const getAllTags = async (params: GetAllTagsParams) => {
   const { searchQuery, filter } = params;
-  const query: FilterQuery<typeof Tag> = {};
+  const query: FilterQuery<ITag> = {};
   if (searchQuery) {
     query.$or = [
       {
@@ -89,7 +89,7 @@ export const getQuestionByTagId = async (params: GetQuestionsByTagIdParams) => {
   try {
     await connectToDatabase();
     const { tagId, searchQuery } = params;
-    const query: FilterQuery<typeof Question> = {};
+    const query: FilterQuery<IQuestion> = {};
 
     if (searchQuery) {
       query.$or = [
