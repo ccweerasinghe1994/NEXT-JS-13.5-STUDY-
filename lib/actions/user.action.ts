@@ -92,10 +92,21 @@ export const deleteUser = async (params: DeleteUserParams) => {
 };
 export const getAllUsers = async (params: GetAllUsersParams) => {
   try {
-    const { page = 1, pageSize = 20, searchQuery, filter } = params;
-    console.log(page, pageSize, searchQuery, filter);
+    const { searchQuery } = params;
+    console.log(searchQuery);
+    const query: FilterQuery<typeof User> = {};
+
+    if (searchQuery) {
+      query.$or = [
+        {
+          name: { $regex: new RegExp(searchQuery, "i") },
+          username: { $regex: new RegExp(searchQuery, "i") },
+        },
+      ];
+    }
+
     await connectToDatabase();
-    const users = await User.find({}).sort({
+    const users = await User.find(query).sort({
       createdAt: -1,
     });
 
