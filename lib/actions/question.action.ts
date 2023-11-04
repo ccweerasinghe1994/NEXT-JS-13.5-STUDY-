@@ -107,7 +107,7 @@ export async function getQuestions(params: IGetQuestionsParams) {
         model: User,
       })
       .sort(sortOptions);
-    return { questions };
+    return { questions, isNext: true };
   } catch (error) {
     console.error(error);
     throw error;
