@@ -19,7 +19,7 @@ const Page: FC<URLProps> = async ({ params, searchParams }) => {
       <div className="mt-11 w-full">
         <LocalSearch
           imageSrc={"/assets/icons/search.svg"}
-          route={"/"}
+          route={`/tags/${params.id}`}
           iconPosition={"left"}
           placeholder={"Search Tag Questions ..."}
           otherClasses={"flex-1"}
