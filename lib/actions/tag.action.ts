@@ -7,10 +7,10 @@ import {
   GetQuestionsByTagIdParams,
   GetTopInteractedTagsParams,
 } from "@/lib/actions/shared";
-import Tag from "@/database/tag.model";
+import Tag, { ITag } from "@/database/tag.model";
 import { FilterQuery } from "mongoose";
 import { throwError } from "@/lib/utils";
-import Question from "@/database/question.model";
+import Question, { IQuestion } from "@/database/question.model";
 
 export const getTopInteractiveTags = async (
   params: GetTopInteractedTagsParams,
@@ -44,10 +44,10 @@ export const getTopInteractiveTags = async (
     throw error;
   }
 };
-
+type TGetAllTags = "popular" | "recent" | "name" | "old";
 export const getAllTags = async (params: GetAllTagsParams) => {
-  const { searchQuery } = params;
-  const query: FilterQuery<typeof Tag> = {};
+  const { searchQuery, filter } = params;
+  const query: FilterQuery<ITag> = {};
   if (searchQuery) {
     query.$or = [
       {
@@ -55,9 +55,29 @@ export const getAllTags = async (params: GetAllTagsParams) => {
       },
     ];
   }
+
+  let sortObject = {};
+
+  switch (filter as TGetAllTags) {
+    case "popular":
+      sortObject = { questions: -1 };
+      break;
+    case "recent":
+      sortObject = { createdOn: -1 };
+      break;
+    case "name":
+      sortObject = { name: 1 };
+      break;
+    case "old":
+      sortObject = { createdOn: 1 };
+      break;
+    default:
+      break;
+  }
+
   try {
     await connectToDatabase();
-    const tags = await Tag.find(query);
+    const tags = await Tag.find(query).sort(sortObject);
     return { tags };
   } catch (error) {
     console.error(error);
@@ -69,7 +89,7 @@ export const getQuestionByTagId = async (params: GetQuestionsByTagIdParams) => {
   try {
     await connectToDatabase();
     const { tagId, searchQuery } = params;
-    const query: FilterQuery<typeof Question> = {};
+    const query: FilterQuery<IQuestion> = {};
 
     if (searchQuery) {
       query.$or = [

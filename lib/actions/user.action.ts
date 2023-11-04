@@ -22,6 +22,15 @@ import { TAnswer, TQuestion } from "@/types/types";
 type TGetUserById = {
   userId: string;
 };
+
+type TFilterOptions = "new_users" | "old_users" | "top_contributors";
+type TFilterUserOptions =
+  | "most_recent"
+  | "oldest"
+  | "most_voted"
+  | "most_viewed"
+  | "most_answered";
+
 export async function getUserById(params: TGetUserById): Promise<IUser | null> {
   try {
     const { userId } = params;
@@ -92,7 +101,8 @@ export const deleteUser = async (params: DeleteUserParams) => {
 };
 export const getAllUsers = async (params: GetAllUsersParams) => {
   try {
-    const { searchQuery } = params;
+    await connectToDatabase();
+    const { searchQuery, filter } = params;
     console.log(searchQuery);
     const query: FilterQuery<typeof User> = {};
 
@@ -105,10 +115,29 @@ export const getAllUsers = async (params: GetAllUsersParams) => {
       ];
     }
 
-    await connectToDatabase();
-    const users = await User.find(query).sort({
-      createdAt: -1,
-    });
+    let sortOptions = {};
+
+    switch (filter as TFilterOptions) {
+      case "new_users":
+        sortOptions = {
+          joinedAt: -1,
+        };
+        break;
+      case "old_users":
+        sortOptions = {
+          joinedAt: 1,
+        };
+        break;
+      case "top_contributors":
+        sortOptions = {
+          reputation: -1,
+        };
+        break;
+      default:
+        break;
+    }
+
+    const users = await User.find(query).sort(sortOptions);
 
     return {
       users,
@@ -167,7 +196,7 @@ export const toggleSaveQuestion = async (params: ToggleSaveQuestionParams) => {
 export const getSavedQuestion = async (params: GetSavedQuestionsParams) => {
   try {
     await connectToDatabase();
-    const { searchQuery, clerkId } = params;
+    const { searchQuery, clerkId, filter } = params;
     const query: FilterQuery<typeof Question> = {};
     if (searchQuery) {
       query.$or = [
@@ -177,25 +206,55 @@ export const getSavedQuestion = async (params: GetSavedQuestionsParams) => {
       ];
     }
 
+    let filterOptions = {};
+
+    switch (filter as TFilterUserOptions) {
+      case "most_recent":
+        filterOptions = {
+          createdAt: -1,
+        };
+        break;
+      case "oldest":
+        filterOptions = {
+          createdAt: 1,
+        };
+        break;
+      case "most_voted":
+        filterOptions = {
+          upvotes: -1,
+        };
+        break;
+      case "most_viewed":
+        filterOptions = {
+          views: -1,
+        };
+        break;
+      case "most_answered":
+        filterOptions = {
+          answers: -1,
+        };
+        break;
+      default:
+        break;
+    }
+
     const user = await User.findOne({ clerkId }).populate({
       path: "saved",
       match: query,
-      options: {
-        sort: {
-          createdAt: -1,
+      populate: [
+        {
+          path: "tags",
+          model: Tag,
+          select: "name _id",
         },
-        populate: [
-          {
-            path: "tags",
-            model: Tag,
-            select: "name _id",
-          },
-          {
-            path: "author",
-            model: User,
-            select: "name _id clerkId picture",
-          },
-        ],
+        {
+          path: "author",
+          model: User,
+          select: "name _id clerkId picture",
+        },
+      ],
+      options: {
+        sort: filterOptions,
       },
     });
 

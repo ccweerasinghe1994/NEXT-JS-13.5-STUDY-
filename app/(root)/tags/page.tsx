@@ -10,6 +10,7 @@ import { SearchParamsProps } from "@/types/types";
 const TagsPage: FC<SearchParamsProps> = async ({ searchParams }) => {
   const results = await getAllTags({
     searchQuery: searchParams.q,
+    filter: searchParams.filter,
   });
   return (
     <div>
