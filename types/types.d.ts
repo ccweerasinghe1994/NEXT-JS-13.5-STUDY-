@@ -43,7 +43,7 @@ export type BadgeCriteriaType = keyof typeof BADGE_CRITERIA;
 
 export type TFilterItem = {
   name: string;
-  value: string;
+  value: "newest" | "recommended" | "frequent" | "unanswered";
 };
 
 export type TTag = {
