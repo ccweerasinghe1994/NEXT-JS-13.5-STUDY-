@@ -8,6 +8,7 @@ import Link from "next/link";
 import { FC } from "react";
 import ParseHTML from "../parseHtml/ParseHTML";
 import Votes from "@/components/shared/votes/Votes";
+import Pagination from "@/components/shared/pagination/Pagination";
 
 type TAllAnswerProps = {
   questionId: ObjectId;
@@ -26,7 +27,8 @@ const AllAnswers: FC<TAllAnswerProps> = async ({
 }) => {
   const result = await getAnswerByQuestionId({
     questionId,
-    page: page || 1,
+    page: page ? +page : 1,
+    pageSize: 2,
     sortBy: filter,
   });
   const { answers } = result;
@@ -78,6 +80,9 @@ const AllAnswers: FC<TAllAnswerProps> = async ({
             <ParseHTML data={answer.content} />
           </article>
         ))}
+      </div>
+      <div className="mt-10">
+        <Pagination pageNumbers={page ? +page : 1} isNext={result.isNext} />
       </div>
     </div>
   );

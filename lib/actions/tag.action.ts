@@ -94,7 +94,8 @@ export const getAllTags = async (params: GetAllTagsParams) => {
 export const getQuestionByTagId = async (params: GetQuestionsByTagIdParams) => {
   try {
     await connectToDatabase();
-    const { tagId, searchQuery } = params;
+    const { tagId, searchQuery, pageSize = 2, page = 1 } = params;
+    const skip = (page - 1) * pageSize;
     const query: FilterQuery<IQuestion> = {};
 
     if (searchQuery) {
@@ -111,22 +112,24 @@ export const getQuestionByTagId = async (params: GetQuestionsByTagIdParams) => {
       path: "questions",
       model: Question,
       match: query,
+      populate: [
+        {
+          path: "tags",
+          model: Tag,
+          select: "name _id",
+        },
+        {
+          path: "author",
+          model: User,
+          select: "name _id clerkId picture",
+        },
+      ],
       options: {
         sort: {
           createdAt: -1,
         },
-        populate: [
-          {
-            path: "tags",
-            model: Tag,
-            select: "name _id",
-          },
-          {
-            path: "author",
-            model: User,
-            select: "name _id clerkId picture",
-          },
-        ],
+        limit: pageSize + 1,
+        skip,
       },
     });
 
@@ -136,9 +139,12 @@ export const getQuestionByTagId = async (params: GetQuestionsByTagIdParams) => {
 
     const questions = tag.questions;
 
+    const isNext = questions.length > pageSize;
+
     return {
       tagTitle: tag.name,
       questions,
+      isNext,
     };
   } catch (e) {
     console.log(e);
