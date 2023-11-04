@@ -203,7 +203,8 @@ export const toggleSaveQuestion = async (params: ToggleSaveQuestionParams) => {
 export const getSavedQuestion = async (params: GetSavedQuestionsParams) => {
   try {
     await connectToDatabase();
-    const { searchQuery, clerkId, filter } = params;
+    const { searchQuery, clerkId, filter, pageSize = 2, page = 1 } = params;
+    const skipAmount = (page - 1) * pageSize;
     const query: FilterQuery<typeof Question> = {};
     if (searchQuery) {
       query.$or = [
@@ -262,6 +263,8 @@ export const getSavedQuestion = async (params: GetSavedQuestionsParams) => {
       ],
       options: {
         sort: filterOptions,
+        limit: pageSize + 1,
+        skip: skipAmount,
       },
     });
 
@@ -271,8 +274,10 @@ export const getSavedQuestion = async (params: GetSavedQuestionsParams) => {
 
     const savedQuestions = user.saved;
 
+    const isNext = user.saved.length > pageSize;
     return {
       questions: savedQuestions,
+      isNext,
     };
   } catch (error) {
     console.error(error);
