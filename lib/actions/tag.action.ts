@@ -44,9 +44,9 @@ export const getTopInteractiveTags = async (
     throw error;
   }
 };
-
+type TGetAllTags = "popular" | "recent" | "name" | "old";
 export const getAllTags = async (params: GetAllTagsParams) => {
-  const { searchQuery } = params;
+  const { searchQuery, filter } = params;
   const query: FilterQuery<typeof Tag> = {};
   if (searchQuery) {
     query.$or = [
@@ -55,9 +55,29 @@ export const getAllTags = async (params: GetAllTagsParams) => {
       },
     ];
   }
+
+  let sortObject = {};
+
+  switch (filter as TGetAllTags) {
+    case "popular":
+      sortObject = { questions: -1 };
+      break;
+    case "recent":
+      sortObject = { createdOn: -1 };
+      break;
+    case "name":
+      sortObject = { name: 1 };
+      break;
+    case "old":
+      sortObject = { createdOn: 1 };
+      break;
+    default:
+      break;
+  }
+
   try {
     await connectToDatabase();
-    const tags = await Tag.find(query);
+    const tags = await Tag.find(query).sort(sortObject);
     return { tags };
   } catch (error) {
     console.error(error);
