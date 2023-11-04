@@ -6,11 +6,14 @@ import Link from "next/link";
 import UserCard from "@/components/cards/UserCard";
 import { SearchParamsProps } from "@/types/types";
 import { FC } from "react";
+import Pagination from "@/components/shared/pagination/Pagination";
 
 const CommunityPage: FC<SearchParamsProps> = async ({ searchParams }) => {
   const results = await getAllUsers({
     searchQuery: searchParams.q,
     filter: searchParams.filter,
+    page: searchParams.page ? +searchParams.page : 1,
+    pageSize: 10,
   });
   return (
     <>
@@ -48,6 +51,12 @@ const CommunityPage: FC<SearchParamsProps> = async ({ searchParams }) => {
           </div>
         )}
       </section>
+      <div className="mt-10">
+        <Pagination
+          pageNumbers={searchParams?.page ? +searchParams?.page : 1}
+          isNext={results.isNext}
+        />
+      </div>
     </>
   );
 };
