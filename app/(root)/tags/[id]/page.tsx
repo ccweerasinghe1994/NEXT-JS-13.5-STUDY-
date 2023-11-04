@@ -4,12 +4,14 @@ import LocalSearch from "@/components/shared/search/LocalSearch";
 import { TQuestion, URLProps } from "@/types/types";
 import QuestionCard from "@/components/cards/QuestionCard";
 import NoResult from "@/components/shared/noResult/NoResult";
+import Pagination from "@/components/shared/pagination/Pagination";
 
 const Page: FC<URLProps> = async ({ params, searchParams }) => {
-  const { questions, tagTitle } = await getQuestionByTagId({
+  const { questions, tagTitle, isNext } = await getQuestionByTagId({
     tagId: params.id,
-    page: 1,
+    page: searchParams.page ? +searchParams.page : 1,
     searchQuery: searchParams.q,
+    pageSize: 2,
   });
 
   return (
@@ -43,6 +45,12 @@ const Page: FC<URLProps> = async ({ params, searchParams }) => {
             LinkText={"Ask a Question"}
           />
         )}
+      </div>
+      <div className="mt-10">
+        <Pagination
+          pageNumbers={searchParams.page ? +searchParams.page : 1}
+          isNext={isNext}
+        />
       </div>
     </div>
   );

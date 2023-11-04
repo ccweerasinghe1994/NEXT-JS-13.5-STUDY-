@@ -38,36 +38,36 @@ export const createAnswer = async (params: CreateAnswerParams) => {
 type TAllAnswersSortBy = "highestUpvotes" | "lowestUpvotes" | "recent" | "old";
 
 export const getAnswerByQuestionId = async (params: GetAnswersParams) => {
-  const { questionId, sortBy } = params;
-
-  let sortObject: Partial<Record<keyof IAnswer, SortOrder>> = {};
-
-  switch (sortBy as TAllAnswersSortBy) {
-    case "highestUpvotes":
-      sortObject = {
-        upvotes: -1,
-      };
-      break;
-    case "lowestUpvotes":
-      sortObject = {
-        upvotes: 1,
-      };
-      break;
-    case "recent":
-      sortObject = {
-        createdAt: -1,
-      };
-      break;
-    case "old":
-      sortObject = {
-        createdAt: 1,
-      };
-      break;
-    default:
-      break;
-  }
-
   try {
+    const { questionId, sortBy, pageSize = 2, page = 1 } = params;
+    const skip = (page - 1) * pageSize;
+    let sortObject: Partial<Record<keyof IAnswer, SortOrder>> = {};
+
+    switch (sortBy as TAllAnswersSortBy) {
+      case "highestUpvotes":
+        sortObject = {
+          upvotes: -1,
+        };
+        break;
+      case "lowestUpvotes":
+        sortObject = {
+          upvotes: 1,
+        };
+        break;
+      case "recent":
+        sortObject = {
+          createdAt: -1,
+        };
+        break;
+      case "old":
+        sortObject = {
+          createdAt: 1,
+        };
+        break;
+      default:
+        break;
+    }
+
     const answers = await Answer.find({
       question: questionId,
     })
@@ -76,9 +76,16 @@ export const getAnswerByQuestionId = async (params: GetAnswersParams) => {
         model: "User",
         select: "_id clerkId picture name",
       })
-      .sort(sortObject);
+      .sort(sortObject)
+      .skip(skip)
+      .limit(pageSize);
+    const totalAnswers = await Answer.countDocuments({
+      question: questionId,
+    });
+    const isNext = totalAnswers > skip + answers.length;
     return {
       answers,
+      isNext,
     };
   } catch (error) {
     console.log(error);

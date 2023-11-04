@@ -65,38 +65,38 @@ export async function createQuestion(params: ICreateQuestionParams) {
 }
 
 export async function getQuestions(params: IGetQuestionsParams) {
-  const { searchQuery, filter } = params;
-
-  const query: FilterQuery<typeof Question> = {};
-
-  if (searchQuery) {
-    query.$or = [
-      { title: { $regex: new RegExp(searchQuery, "i") } },
-      { content: { $regex: new RegExp(searchQuery, "i") } },
-    ];
-  }
-
-  let sortOptions = {};
-  const typedFilter = filter as TFilterValueType;
-  switch (typedFilter) {
-    case "newest":
-      sortOptions = { createdAt: -1 };
-      break;
-    case "recommended":
-      sortOptions = { views: -1 };
-      break;
-    case "frequent":
-      sortOptions = { answers: -1 };
-      break;
-    case "unanswered":
-      query.answers = { $size: 0 };
-      break;
-    default:
-      break;
-  }
-
   try {
     await connectToDatabase();
+
+    const { searchQuery, filter, page = 1, pageSize = 2 } = params;
+    const query: FilterQuery<typeof Question> = {};
+    const skipAmount = (page - 1) * pageSize;
+    if (searchQuery) {
+      query.$or = [
+        { title: { $regex: new RegExp(searchQuery, "i") } },
+        { content: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+
+    let sortOptions = {};
+    const typedFilter = filter as TFilterValueType;
+    switch (typedFilter) {
+      case "newest":
+        sortOptions = { createdAt: -1 };
+        break;
+      case "recommended":
+        sortOptions = { views: -1 };
+        break;
+      case "frequent":
+        sortOptions = { answers: -1 };
+        break;
+      case "unanswered":
+        query.answers = { $size: 0 };
+        break;
+      default:
+        break;
+    }
+
     const questions = await Question.find(query)
       .populate({
         path: "tags",
@@ -106,8 +106,12 @@ export async function getQuestions(params: IGetQuestionsParams) {
         path: "author",
         model: User,
       })
-      .sort(sortOptions);
-    return { questions };
+      .sort(sortOptions)
+      .limit(pageSize)
+      .skip(skipAmount);
+    const totalQuestions = await Question.countDocuments(query);
+    const isNext = totalQuestions > skipAmount + questions.length;
+    return { questions, isNext };
   } catch (error) {
     console.error(error);
     throw error;
