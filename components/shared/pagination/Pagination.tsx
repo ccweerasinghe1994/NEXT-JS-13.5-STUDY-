@@ -23,6 +23,9 @@ const Pagination: FC<TPaginationProps> = ({ isNext, pageNumbers }) => {
 
     router.push(newUrl);
   };
+
+  if (pageNumbers === 1 && !isNext) return null;
+
   return (
     <div className={"flex w-full items-center justify-center gap-2"}>
       <Button
