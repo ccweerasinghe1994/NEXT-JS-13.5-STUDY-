@@ -42,7 +42,7 @@ const HomeFilter = () => {
           }`}
           key={filter.value}
           onClick={() => {
-            handleTypeClick(filter.value);
+            handleTypeClick(filter.value as TFilterValueType);
           }}
         >
           {filter.name}

@@ -50,7 +50,7 @@ export type TFilterValueType =
 
 export type TFilterItem = {
   name: string;
-  value: TFilterValueType;
+  value: string;
 };
 
 export type TTag = {

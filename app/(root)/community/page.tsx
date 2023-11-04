@@ -10,6 +10,7 @@ import { FC } from "react";
 const CommunityPage: FC<SearchParamsProps> = async ({ searchParams }) => {
   const results = await getAllUsers({
     searchQuery: searchParams.q,
+    filter: searchParams.filter,
   });
   return (
     <>
