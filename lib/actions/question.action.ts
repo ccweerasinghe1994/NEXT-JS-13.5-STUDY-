@@ -17,6 +17,7 @@ import { FilterQuery, ObjectId } from "mongoose";
 import Answer from "@/database/answer.model";
 import Interaction from "@/database/interaction.model";
 import { throwError } from "@/lib/utils";
+import { TFilterValueType } from "@/types/types";
 
 export async function createQuestion(params: ICreateQuestionParams) {
   try {
@@ -64,7 +65,7 @@ export async function createQuestion(params: ICreateQuestionParams) {
 }
 
 export async function getQuestions(params: IGetQuestionsParams) {
-  const { searchQuery } = params;
+  const { searchQuery, filter } = params;
 
   const query: FilterQuery<typeof Question> = {};
 
@@ -74,6 +75,26 @@ export async function getQuestions(params: IGetQuestionsParams) {
       { content: { $regex: new RegExp(searchQuery, "i") } },
     ];
   }
+
+  let sortOptions = {};
+  const typedFilter = filter as TFilterValueType;
+  switch (typedFilter) {
+    case "newest":
+      sortOptions = { createdAt: -1 };
+      break;
+    case "recommended":
+      sortOptions = { views: -1 };
+      break;
+    case "frequent":
+      sortOptions = { answers: -1 };
+      break;
+    case "unanswered":
+      query.answers = { $size: 0 };
+      break;
+    default:
+      break;
+  }
+
   try {
     await connectToDatabase();
     const questions = await Question.find(query)
@@ -85,7 +106,7 @@ export async function getQuestions(params: IGetQuestionsParams) {
         path: "author",
         model: User,
       })
-      .sort({ createdAt: -1 });
+      .sort(sortOptions);
     return { questions };
   } catch (error) {
     console.error(error);

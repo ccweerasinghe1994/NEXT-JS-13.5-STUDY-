@@ -4,13 +4,15 @@ import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { formatUrlQuery } from "@/lib/utils";
+import { TFilterValueType } from "@/types/types";
 
-type filterType = "newest" | "recommended" | "frequent" | "unanswered";
 const HomeFilter = () => {
   const searchParams = useSearchParams();
-  const [active, setActive] = useState<filterType | undefined>("recommended");
+  const [active, setActive] = useState<TFilterValueType | undefined>(
+    "recommended",
+  );
   const router = useRouter();
-  const handleTypeClick = (type: filterType) => {
+  const handleTypeClick = (type: TFilterValueType) => {
     if (active === type) {
       setActive(undefined);
       const newUrl = formatUrlQuery({
@@ -24,7 +26,7 @@ const HomeFilter = () => {
       const newUrl = formatUrlQuery({
         params: searchParams.toString(),
         key: "filter",
-        value: type,
+        value: type ?? null,
       });
       router.push(newUrl, { scroll: false });
     }

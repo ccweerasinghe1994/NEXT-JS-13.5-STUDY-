@@ -41,9 +41,16 @@ export interface BadgeCounts {
 }
 export type BadgeCriteriaType = keyof typeof BADGE_CRITERIA;
 
+export type TFilterValueType =
+  | "newest"
+  | "recommended"
+  | "frequent"
+  | "unanswered"
+  | undefined;
+
 export type TFilterItem = {
   name: string;
-  value: "newest" | "recommended" | "frequent" | "unanswered";
+  value: TFilterValueType;
 };
 
 export type TTag = {
