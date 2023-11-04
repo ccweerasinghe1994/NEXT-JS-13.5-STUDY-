@@ -21,7 +21,7 @@ const UserCard: FC<TUserCardProps> = async ({
   const interactedTags = await getTopInteractiveTags({ userId: _id });
   return (
     <Link
-      href={`/profile/${_id}`}
+      href={`/profile/${clerkId}`}
       className={
         "w-full border shadow-xl dark:border-none max-xs:min-w-full xs:w-[260px]"
       }
