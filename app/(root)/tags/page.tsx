@@ -6,11 +6,14 @@ import { getAllTags } from "@/lib/actions/tag.action";
 import TagCard from "@/components/cards/TagCard";
 import NoResult from "@/components/shared/noResult/NoResult";
 import { SearchParamsProps } from "@/types/types";
+import Pagination from "@/components/shared/pagination/Pagination";
 
 const TagsPage: FC<SearchParamsProps> = async ({ searchParams }) => {
   const results = await getAllTags({
     searchQuery: searchParams.q,
     filter: searchParams.filter,
+    page: searchParams.page ? +searchParams.page : 1,
+    pageSize: 2,
   });
   return (
     <div>
@@ -41,6 +44,12 @@ const TagsPage: FC<SearchParamsProps> = async ({ searchParams }) => {
           />
         )}
       </section>
+      <div className="mt-10">
+        <Pagination
+          pageNumbers={searchParams.page ? +searchParams.page : 1}
+          isNext={results.isNext}
+        />
+      </div>
     </div>
   );
 };
