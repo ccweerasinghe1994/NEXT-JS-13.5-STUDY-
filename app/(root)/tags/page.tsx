@@ -5,11 +5,12 @@ import { TagFilters } from "@/constants/filters";
 import { getAllTags } from "@/lib/actions/tag.action";
 import TagCard from "@/components/cards/TagCard";
 import NoResult from "@/components/shared/noResult/NoResult";
+import { SearchParamsProps } from "@/types/types";
 
-type TTagsPageProps = {};
-
-const TagsPage: FC<TTagsPageProps> = async () => {
-  const results = await getAllTags({});
+const TagsPage: FC<SearchParamsProps> = async ({ searchParams }) => {
+  const results = await getAllTags({
+    searchQuery: searchParams.q,
+  });
   return (
     <div>
       <h1 className={"h1-bold text-dark100_light900"}>Tags</h1>

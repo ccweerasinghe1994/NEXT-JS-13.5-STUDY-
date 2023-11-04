@@ -3,17 +3,19 @@ import Filter from "@/components/shared/filters/Filter";
 import { QuestionFilters } from "@/constants/filters";
 import NoResult from "@/components/shared/noResult/NoResult";
 import QuestionCard from "@/components/cards/QuestionCard";
-import { TQuestion } from "@/types/types";
+import { SearchParamsProps, TQuestion } from "@/types/types";
 import { getSavedQuestion } from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs";
+import { FC } from "react";
 
-export default async function Home() {
+const CollectionPage: FC<SearchParamsProps> = async ({ searchParams }) => {
   const { userId } = auth();
 
   if (!userId) return null;
 
   const { questions } = await getSavedQuestion({
     clerkId: userId,
+    searchQuery: searchParams.q,
   });
   return (
     <>
@@ -22,7 +24,7 @@ export default async function Home() {
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearch
           imageSrc={"/assets/icons/search.svg"}
-          route={"/"}
+          route={"/collection"}
           iconPosition={"left"}
           placeholder={"Search Questions ..."}
           otherClasses={"flex-1"}
@@ -53,4 +55,6 @@ export default async function Home() {
       </div>
     </>
   );
-}
+};
+
+export default CollectionPage;

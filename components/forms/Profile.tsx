@@ -56,14 +56,12 @@ const Profile: FC<TProfileProps> = ({ user, clerkId }) => {
       });
 
       router.back();
-      console.log(values);
     } catch (e) {
       console.log(e);
       throw e;
     } finally {
       setIsSubmitting(false);
     }
-    console.log("submit");
   };
   return (
     <Form {...form}>

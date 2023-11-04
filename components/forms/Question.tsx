@@ -30,8 +30,6 @@ type TQuestionProps = {
   questionDetails?: string;
 };
 
-const formType = "edit";
-
 const Question: FC<TQuestionProps> = ({
   mongoUserId,
   questionDetails,
@@ -42,7 +40,6 @@ const Question: FC<TQuestionProps> = ({
   const editorRef = useRef(null);
   const router = useRouter();
   const pathName = usePathname();
-
   const parsedQuestionDetails: {
     _id: ObjectId;
     views: number;
@@ -55,7 +52,6 @@ const Question: FC<TQuestionProps> = ({
     createdAt: Date;
     content: string;
   } = JSON.parse(questionDetails || "{}");
-  console.log(parsedQuestionDetails.tags);
   const form = useForm<TQuestionsSchema>({
     resolver: zodResolver(QuestionsSchema),
     defaultValues: {
@@ -74,9 +70,7 @@ const Question: FC<TQuestionProps> = ({
     setIsFormSubmitting(true);
 
     try {
-      console.log(values);
-      console.log("mongoUserId", mongoUserId);
-      if (formType === "edit") {
+      if (type === "edit") {
         await editQuestion({
           title: values.title,
           content: values.explanation,
@@ -247,7 +241,7 @@ const Question: FC<TQuestionProps> = ({
               <FormControl className={"mt-3.5"}>
                 <>
                   <Input
-                    disabled={formType === "edit"}
+                    disabled={type === "edit"}
                     className={
                       "no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
                     }
@@ -303,9 +297,9 @@ const Question: FC<TQuestionProps> = ({
           disabled={isFormSubmitting}
         >
           {isFormSubmitting ? (
-            <> {formType === "edit" ? "Editing..." : "Posting..."}</>
+            <> {type === "edit" ? "Editing..." : "Posting..."}</>
           ) : (
-            <>{formType === "edit" ? "Edit Question" : "Ask a Question"}</>
+            <>{type === "edit" ? "Edit Question" : "Ask a Question"}</>
           )}
         </Button>
       </form>

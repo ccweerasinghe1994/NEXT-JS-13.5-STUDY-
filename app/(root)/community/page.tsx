@@ -4,10 +4,13 @@ import { UserFilters } from "@/constants/filters";
 import { getAllUsers } from "@/lib/actions/user.action";
 import Link from "next/link";
 import UserCard from "@/components/cards/UserCard";
+import { SearchParamsProps } from "@/types/types";
+import { FC } from "react";
 
-const CommunityPage = async () => {
-  const results = await getAllUsers({});
-  console.log(results);
+const CommunityPage: FC<SearchParamsProps> = async ({ searchParams }) => {
+  const results = await getAllUsers({
+    searchQuery: searchParams.q,
+  });
   return (
     <>
       <h1 className={"h1-bold text-dark100_light900"}>All Users</h1>
