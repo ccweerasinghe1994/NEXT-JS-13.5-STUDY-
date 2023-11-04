@@ -241,20 +241,20 @@ export const getSavedQuestion = async (params: GetSavedQuestionsParams) => {
     const user = await User.findOne({ clerkId }).populate({
       path: "saved",
       match: query,
+      populate: [
+        {
+          path: "tags",
+          model: Tag,
+          select: "name _id",
+        },
+        {
+          path: "author",
+          model: User,
+          select: "name _id clerkId picture",
+        },
+      ],
       options: {
         sort: filterOptions,
-        populate: [
-          {
-            path: "tags",
-            model: Tag,
-            select: "name _id",
-          },
-          {
-            path: "author",
-            model: User,
-            select: "name _id clerkId picture",
-          },
-        ],
       },
     });
 
