@@ -15,8 +15,9 @@ import {
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
-import { throwError } from "@/lib/utils";
+import { assignBadges, throwError } from "@/lib/utils";
 import Answer from "@/database/answer.model";
+import { BadgeCriteriaType } from "@/types/types";
 
 type TGetUserById = {
   userId: string;
@@ -84,10 +85,6 @@ export const deleteUser = async (params: DeleteUserParams) => {
     // cleanup user's questions
     // cleanup user's answers
     // cleanup user's comments
-
-    // const userQuestions = await Question.find({
-    //   author: findUser._id,
-    // }).distinct("_id");
 
     await Question.deleteMany({
       author: findUser._id,
@@ -300,7 +297,41 @@ export const getUserInfo = async (params: GetUserByIdParams) => {
     const totalAnswers = await Answer.countDocuments({
       author: user._id,
     });
-    return { user, totalQuestions, totalAnswers };
+    const [questionUpvotes] = await Question.aggregate([
+      { $match: { author: user._id } },
+      { $project: { _id: 0, upvotes: { $size: "$upvotes" } } },
+      { $group: { _id: null, totalUpVotes: { $sum: "$upvotes" } } },
+    ]);
+    const [answerUpvotes] = await Answer.aggregate([
+      { $match: { author: user._id } },
+      { $project: { _id: 0, upvotes: { $size: "$upvotes" } } },
+      { $group: { _id: null, totalUpVotes: { $sum: "$upvotes" } } },
+    ]);
+
+    const [questionViews] = await Question.aggregate([
+      { $match: { author: user._id } },
+      { $group: { _id: null, totalViews: { $sum: "$views" } } },
+    ]);
+
+    const criteria = [
+      { type: "QUESTION_COUNT" as BadgeCriteriaType, count: totalQuestions },
+      { type: "ANSWER_COUNT" as BadgeCriteriaType, count: totalAnswers },
+      {
+        type: "ANSWER_UPVOTES" as BadgeCriteriaType,
+        count: +answerUpvotes?.totalUpVotes || 0,
+      },
+      {
+        type: "QUESTION_UPVOTES" as BadgeCriteriaType,
+        count: +questionUpvotes?.totalUpVotes || 0,
+      },
+      {
+        type: "TOTAL_VIEWS" as BadgeCriteriaType,
+        count: +questionViews?.totalViews || 0,
+      },
+    ];
+    const badgeCounts = assignBadges({ criteria });
+    console.log(badgeCounts);
+    return { user, totalQuestions, totalAnswers, badgeCounts };
   } catch (error) {
     console.error(error);
     throw error;
