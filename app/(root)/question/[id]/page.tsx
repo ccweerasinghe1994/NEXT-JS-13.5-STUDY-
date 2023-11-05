@@ -95,7 +95,7 @@ const Page: FC<URLProps> = async ({ params, searchParams }) => {
         filter={searchParams?.filter}
       />
       <Answer
-        question={question.content}
+        question={question.title}
         questionId={JSON.stringify(question._id)}
         authorId={JSON.stringify(mongoUser?._id ?? "")}
       />
