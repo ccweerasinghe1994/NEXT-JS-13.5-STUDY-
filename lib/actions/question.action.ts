@@ -234,7 +234,18 @@ export const downVoteQuestion = async (params: QuestionVoteParams) => {
     if (!question) {
       throw new Error("Question not found");
     }
-
+    const incrementBy = hasDownVoted ? -1 : 1;
+    await User.findByIdAndUpdate(userId, {
+      $inc: {
+        reputation: incrementBy,
+      },
+    });
+    // increment author reputation by +10 or -10 depending on the action
+    await User.findOneAndUpdate(question.author, {
+      $inc: {
+        reputation: incrementBy * 10,
+      },
+    });
     revalidatePath(path);
   } catch (error) {
     console.error(error);
