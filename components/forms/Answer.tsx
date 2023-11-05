@@ -25,6 +25,7 @@ type TAnswerProps = {
 
 const Answer: FC<TAnswerProps> = ({ question, questionId, authorId }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmittingAI, setIsSubmittingAI] = useState(false);
   const editorRef = useRef(null);
   const form = useForm<TAnswerSchema>({
     resolver: zodResolver(AnswerSchema),
@@ -53,6 +54,33 @@ const Answer: FC<TAnswerProps> = ({ question, questionId, authorId }) => {
       throw e;
     }
   };
+  const generateAiAnswer = async () => {
+    if (!authorId) return;
+    setIsSubmittingAI(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            question,
+            authorId: JSON.parse(authorId),
+          }),
+        },
+      );
+
+      const data = await response.json();
+      alert(data.reply);
+    } catch (e) {
+      console.log(e);
+      throw e;
+    } finally {
+      setIsSubmittingAI(false);
+    }
+  };
   return (
     <div>
       <div className="mt-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
@@ -63,6 +91,7 @@ const Answer: FC<TAnswerProps> = ({ question, questionId, authorId }) => {
           className={
             "btn  light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none"
           }
+          onClick={generateAiAnswer}
         >
           <Image
             src={"/assets/icons/stars.svg"}
