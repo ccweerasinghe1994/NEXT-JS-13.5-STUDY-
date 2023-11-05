@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { formatUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 import GlobalResult from "@/components/shared/globalResult/GlobalResult";
@@ -13,6 +13,24 @@ const GlobalSearch = () => {
   const query = searchParams.get("q");
   const [search, setSearch] = useState(query || "");
   const [isOpen, setIsOpen] = useState(false);
+  const popupRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+        setSearch("");
+      }
+    };
+    setIsOpen(false);
+    setSearch("");
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [pathName]);
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       if (search) {
@@ -36,7 +54,10 @@ const GlobalSearch = () => {
     return () => clearTimeout(delayDebounceFn);
   }, [search, pathName, router, searchParams, query]);
   return (
-    <div className={"relative w-full max-w-[600px] max-lg:hidden"}>
+    <div
+      ref={popupRef}
+      className={"relative w-full max-w-[600px] max-lg:hidden"}
+    >
       <div className="background-light800_darkgradient relative flex min-h-[56px] grow items-center  gap-1 rounded-xl px-4">
         <Image
           src={"/assets/icons/search.svg"}
@@ -56,6 +77,7 @@ const GlobalSearch = () => {
             if (e.target.value === "" && isOpen) setIsOpen(false);
           }}
           placeholder={"Search Globally"}
+          value={search}
         />
       </div>
       {isOpen && <GlobalResult />}
