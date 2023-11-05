@@ -39,7 +39,7 @@ type TAllAnswersSortBy = "highestUpvotes" | "lowestUpvotes" | "recent" | "old";
 
 export const getAnswerByQuestionId = async (params: GetAnswersParams) => {
   try {
-    const { questionId, sortBy, pageSize = 2, page = 1 } = params;
+    const { questionId, sortBy, pageSize = 10, page = 1 } = params;
     const skip = (page - 1) * pageSize;
     let sortObject: Partial<Record<keyof IAnswer, SortOrder>> = {};
 
