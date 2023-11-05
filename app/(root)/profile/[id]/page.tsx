@@ -84,6 +84,8 @@ const Page: FC<URLProps> = async ({ params, searchParams }) => {
       <Stats
         totalQuestions={result.totalQuestions}
         totalAnswers={result.totalAnswers}
+        badgeCounts={result.badgeCounts}
+        reputation={result.user.reputation}
       />
       <div className="mt-10 flex gap-10">
         <Tabs defaultValue="top-posts" className="flex-1">
