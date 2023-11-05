@@ -57,6 +57,20 @@ export async function createQuestion(params: ICreateQuestionParams) {
         tags: { $each: tagDocuments },
       },
     });
+
+    // give five points to the user who asked the question
+
+    await Interaction.create({
+      user: author,
+      action: "ask_question",
+      question: question._id,
+      tags: tagDocuments,
+    });
+    await User.findByIdAndUpdate(author, {
+      $inc: {
+        reputation: 5,
+      },
+    });
     revalidatePath(path);
   } catch (error) {
     console.error(error);
@@ -68,7 +82,7 @@ export async function getQuestions(params: IGetQuestionsParams) {
   try {
     await connectToDatabase();
 
-    const { searchQuery, filter, page = 1, pageSize = 2 } = params;
+    const { searchQuery, filter, page = 1, pageSize = 10 } = params;
     const query: FilterQuery<typeof Question> = {};
     const skipAmount = (page - 1) * pageSize;
     if (searchQuery) {
@@ -178,6 +192,20 @@ export const upVoteQuestion = async (params: QuestionVoteParams) => {
       throw new Error("Question not found");
     }
 
+    // increment user reputation by +1 or -1 depending on the action
+    const incrementBy = hasUpVoted ? -1 : 1;
+    await User.findByIdAndUpdate(userId, {
+      $inc: {
+        reputation: incrementBy,
+      },
+    });
+    // increment author reputation by +10 or -10 depending on the action
+    await User.findOneAndUpdate(question.author, {
+      $inc: {
+        reputation: incrementBy * 10,
+      },
+    });
+
     revalidatePath(path);
   } catch (error) {
     console.error(error);
@@ -206,7 +234,18 @@ export const downVoteQuestion = async (params: QuestionVoteParams) => {
     if (!question) {
       throw new Error("Question not found");
     }
-
+    const incrementBy = hasDownVoted ? -1 : 1;
+    await User.findByIdAndUpdate(userId, {
+      $inc: {
+        reputation: incrementBy,
+      },
+    });
+    // increment author reputation by +10 or -10 depending on the action
+    await User.findOneAndUpdate(question.author, {
+      $inc: {
+        reputation: incrementBy * 10,
+      },
+    });
     revalidatePath(path);
   } catch (error) {
     console.error(error);

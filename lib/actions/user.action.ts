@@ -101,7 +101,7 @@ export const deleteUser = async (params: DeleteUserParams) => {
 export const getAllUsers = async (params: GetAllUsersParams) => {
   try {
     await connectToDatabase();
-    const { searchQuery, filter, page = 1, pageSize = 2 } = params;
+    const { searchQuery, filter, page = 1, pageSize = 10 } = params;
 
     const skip = (page - 1) * pageSize;
 
@@ -202,7 +202,7 @@ export const toggleSaveQuestion = async (params: ToggleSaveQuestionParams) => {
 export const getSavedQuestion = async (params: GetSavedQuestionsParams) => {
   try {
     await connectToDatabase();
-    const { searchQuery, clerkId, filter, pageSize = 2, page = 1 } = params;
+    const { searchQuery, clerkId, filter, pageSize = 10, page = 1 } = params;
     const skipAmount = (page - 1) * pageSize;
     const query: FilterQuery<typeof Question> = {};
     if (searchQuery) {
@@ -310,7 +310,7 @@ export const getUserInfo = async (params: GetUserByIdParams) => {
 export const getUserQuestions = async (params: GetUserStatsParams) => {
   try {
     await connectToDatabase();
-    const { page = 1, pageSize = 2, userId } = params;
+    const { page = 1, pageSize = 10, userId } = params;
     const skip = (page - 1) * pageSize;
     const totalQuestions = await Question.countDocuments({
       author: userId,
@@ -320,6 +320,7 @@ export const getUserQuestions = async (params: GetUserStatsParams) => {
       author: userId,
     })
       .sort({
+        createdAt: -1,
         views: -1,
         upvotes: -1,
       })
@@ -350,7 +351,7 @@ export const getUserQuestions = async (params: GetUserStatsParams) => {
 export const getUserAnswers = async (params: GetUserStatsParams) => {
   try {
     await connectToDatabase();
-    const { page = 1, pageSize = 2, userId } = params;
+    const { page = 1, pageSize = 10, userId } = params;
     const skip = (page - 1) * pageSize;
     console.log(page, pageSize, userId);
     const totalAnswers = await Answer.countDocuments({
@@ -386,14 +387,3 @@ export const getUserAnswers = async (params: GetUserStatsParams) => {
     throw error;
   }
 };
-
-// export const getAllUsers = async (params: GetAllUsersParams) => {
-//   try {
-//     const { page, pageSize, searchQuery, filter } = params;
-//     await connectToDatabase();
-//     return await User.find({});
-//   } catch (error) {
-//     console.error(error);
-//     throw error;
-//   }
-// };

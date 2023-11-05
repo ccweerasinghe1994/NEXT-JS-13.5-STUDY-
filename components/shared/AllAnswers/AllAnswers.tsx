@@ -28,7 +28,7 @@ const AllAnswers: FC<TAllAnswerProps> = async ({
   const result = await getAnswerByQuestionId({
     questionId,
     page: page ? +page : 1,
-    pageSize: 2,
+    pageSize: 10,
     sortBy: filter,
   });
   const { answers } = result;

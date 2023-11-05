@@ -1,6 +1,6 @@
 import { model, models, ObjectId, Schema } from "mongoose";
 
-export interface IInteraction {
+export interface IInteraction extends Document {
   user: ObjectId;
   action: string;
   question: ObjectId;
