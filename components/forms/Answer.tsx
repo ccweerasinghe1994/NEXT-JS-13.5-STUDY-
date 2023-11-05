@@ -73,7 +73,12 @@ const Answer: FC<TAnswerProps> = ({ question, questionId, authorId }) => {
       );
 
       const data = await response.json();
-      alert(data.reply);
+      const formatAnswer = data.reply.replace(/\n/g, "<br/>");
+
+      if (editorRef.current) {
+        const editor = editorRef.current as any;
+        editor.setContent(formatAnswer);
+      }
     } catch (e) {
       console.log(e);
       throw e;
@@ -93,14 +98,20 @@ const Answer: FC<TAnswerProps> = ({ question, questionId, authorId }) => {
           }
           onClick={generateAiAnswer}
         >
-          <Image
-            src={"/assets/icons/stars.svg"}
-            alt={"AI image"}
-            width={12}
-            height={12}
-            className={"object-contain "}
-          />
-          Generate AI Answer
+          {isSubmittingAI ? (
+            <>Generating....</>
+          ) : (
+            <>
+              <Image
+                src={"/assets/icons/stars.svg"}
+                alt={"AI image"}
+                width={12}
+                height={12}
+                className={"object-contain "}
+              />
+              Generate AI Answer
+            </>
+          )}
         </Button>
       </div>
       <Form {...form}>
