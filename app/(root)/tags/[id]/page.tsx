@@ -11,7 +11,7 @@ const Page: FC<URLProps> = async ({ params, searchParams }) => {
     tagId: params.id,
     page: searchParams.page ? +searchParams.page : 1,
     searchQuery: searchParams.q,
-    pageSize: 2,
+    pageSize: 10,
   });
 
   return (

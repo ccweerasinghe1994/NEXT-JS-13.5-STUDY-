@@ -82,7 +82,7 @@ export async function getQuestions(params: IGetQuestionsParams) {
   try {
     await connectToDatabase();
 
-    const { searchQuery, filter, page = 1, pageSize = 2 } = params;
+    const { searchQuery, filter, page = 1, pageSize = 10 } = params;
     const query: FilterQuery<typeof Question> = {};
     const skipAmount = (page - 1) * pageSize;
     if (searchQuery) {

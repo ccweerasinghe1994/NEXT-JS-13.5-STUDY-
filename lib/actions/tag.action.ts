@@ -47,7 +47,7 @@ export const getTopInteractiveTags = async (
 type TGetAllTags = "popular" | "recent" | "name" | "old";
 export const getAllTags = async (params: GetAllTagsParams) => {
   try {
-    const { searchQuery, filter, pageSize = 2, page = 1 } = params;
+    const { searchQuery, filter, pageSize = 10, page = 1 } = params;
     const skip = (page - 1) * pageSize;
     const query: FilterQuery<ITag> = {};
     if (searchQuery) {
@@ -94,7 +94,7 @@ export const getAllTags = async (params: GetAllTagsParams) => {
 export const getQuestionByTagId = async (params: GetQuestionsByTagIdParams) => {
   try {
     await connectToDatabase();
-    const { tagId, searchQuery, pageSize = 2, page = 1 } = params;
+    const { tagId, searchQuery, pageSize = 10, page = 1 } = params;
     const skip = (page - 1) * pageSize;
     const query: FilterQuery<IQuestion> = {};
 

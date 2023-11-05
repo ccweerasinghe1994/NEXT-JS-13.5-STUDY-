@@ -13,7 +13,7 @@ const TagsPage: FC<SearchParamsProps> = async ({ searchParams }) => {
     searchQuery: searchParams.q,
     filter: searchParams.filter,
     page: searchParams.page ? +searchParams.page : 1,
-    pageSize: 2,
+    pageSize: 10,
   });
   return (
     <div>

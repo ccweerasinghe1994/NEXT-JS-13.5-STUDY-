@@ -18,7 +18,7 @@ const AnswerTab: FC<TAnswerTabProps> = async ({
   const result = await getUserAnswers({
     userId,
     page: searchParams.page ? +searchParams.page : 1,
-    pageSize: 2,
+    pageSize: 10,
   });
   return (
     <>
