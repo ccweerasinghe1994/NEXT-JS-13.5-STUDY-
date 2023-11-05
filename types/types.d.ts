@@ -1,5 +1,10 @@
 import { BADGE_CRITERIA } from "@/constants";
-import { ObjectId } from "mongoose";
+import { Model, ObjectId } from "mongoose";
+import { IUser } from "@/database/user.model";
+import { IAnswer } from "@/database/answer.model";
+import { IQuestion } from "@/database/question.model";
+import { IInteraction } from "@/database/interaction.model";
+import { ITag } from "@/database/tag.model";
 
 export interface SidebarLink {
   imgURL: string;
@@ -93,3 +98,11 @@ export type TAnswer = {
   downvotes: ObjectId[];
   createdAt: Date;
 };
+// extend the global
+export interface IDBMongooseModels {
+  User: Model<IUser>;
+  Answer: Model<IAnswer>;
+  Question: Model<IQuestion>;
+  Interaction: Model<IInteraction>;
+  Tag: Model<ITag>;
+}

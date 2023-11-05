@@ -320,6 +320,7 @@ export const getUserQuestions = async (params: GetUserStatsParams) => {
       author: userId,
     })
       .sort({
+        createdAt: -1,
         views: -1,
         upvotes: -1,
       })

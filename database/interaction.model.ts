@@ -1,8 +1,8 @@
 import { model, models, ObjectId, Schema } from "mongoose";
 
-export interface IInteraction {
+export interface IInteraction extends Document {
   user: ObjectId;
-  action: string;
+  action: "view" | "ask_question";
   question: ObjectId;
   answer: ObjectId;
   tags: ObjectId[];
@@ -17,6 +17,7 @@ const interactionSchema = new Schema<IInteraction>({
   },
   action: {
     type: String,
+    enum: ["view", "ask_question"],
     required: true,
   },
   question: {
