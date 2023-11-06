@@ -9,6 +9,12 @@ import QuestionCard from "@/components/cards/QuestionCard";
 import { getQuestions } from "@/lib/actions/question.action";
 import { SearchParamsProps, TQuestion } from "@/types/types";
 import Pagination from "@/components/shared/pagination/Pagination";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Home page | Stack Flow",
+  description: "Stack Flow is a community of amazing minds, join us now",
+};
 
 export default async function Home({ searchParams }: SearchParamsProps) {
   const { questions, isNext } = await getQuestions({
