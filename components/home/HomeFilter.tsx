@@ -8,9 +8,7 @@ import { TFilterValueType } from "@/types/types";
 
 const HomeFilter = () => {
   const searchParams = useSearchParams();
-  const [active, setActive] = useState<TFilterValueType | undefined>(
-    "recommended",
-  );
+  const [active, setActive] = useState<TFilterValueType | undefined>("newest");
   const router = useRouter();
   const handleTypeClick = (type: TFilterValueType) => {
     if (active === type) {
@@ -37,8 +35,8 @@ const HomeFilter = () => {
         <Button
           className={`body-medium rounded-lg px-6 py-3 capitalize shadow-none ${
             active === filter.value
-              ? "bg-primary-100 text-primary-500"
-              : "bg-light-800 text-light-500 hover:bg-light-900 dark:bg-dark-300 dark:text-light-500"
+              ? "bg-primary-100 text-primary-500 hover:bg-primary-500/20 dark:bg-dark-400 "
+              : "bg-light-800 text-light-500 hover:bg-light-700 dark:bg-dark-300 dark:text-light-500 dark:hover:bg-dark-300"
           }`}
           key={filter.value}
           onClick={() => {

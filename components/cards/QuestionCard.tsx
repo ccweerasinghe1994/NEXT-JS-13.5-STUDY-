@@ -59,27 +59,29 @@ const QuestionCard: FC<TQuestionCardProps> = ({
           href={`/profile/${author._id}`}
           isAuthor={true}
         />
-        <Metric
-          imageUrl={"/assets/icons/like.svg"}
-          alt={"message"}
-          value={upvotes.length}
-          title={" Votes"}
-          textStyles={"text-dark400_light800 small-medium"}
-        />
-        <Metric
-          imageUrl={"/assets/icons/message.svg"}
-          alt={"Upvotes"}
-          value={answers.length}
-          title={" Answers"}
-          textStyles={"text-dark400_light800 small-medium"}
-        />
-        <Metric
-          imageUrl={"/assets/icons/eye.svg"}
-          alt={"eye"}
-          value={views}
-          title={" Views"}
-          textStyles={"text-dark400_light800 small-medium"}
-        />
+        <div className="flex items-center gap-3 max-sm:flex-wrap max-sm:justify-start">
+          <Metric
+            imageUrl={"/assets/icons/like.svg"}
+            alt={"message"}
+            value={upvotes.length}
+            title={" Votes"}
+            textStyles={"text-dark400_light800 small-medium"}
+          />
+          <Metric
+            imageUrl={"/assets/icons/message.svg"}
+            alt={"Upvotes"}
+            value={answers.length}
+            title={" Answers"}
+            textStyles={"text-dark400_light800 small-medium"}
+          />
+          <Metric
+            imageUrl={"/assets/icons/eye.svg"}
+            alt={"eye"}
+            value={views}
+            title={" Views"}
+            textStyles={"text-dark400_light800 small-medium"}
+          />
+        </div>
       </div>
     </div>
   );

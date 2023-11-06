@@ -74,13 +74,13 @@ const Profile: FC<TProfileProps> = ({ user, clerkId }) => {
           name="name"
           render={({ field }) => (
             <FormItem className={"space-y-3.5 "}>
-              <FormLabel>
+              <FormLabel className={"paragraph-semibold text-dark400_light800"}>
                 Name <span className="text-primary-500">*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   className={
-                    "text-dark300_light700 background-light700_dark300 no-focus paragraph-regular light-border-2 min-h-[56px] border"
+                    "text-dark300_light700 background-light800_dark300 no-focus paragraph-regular light-border-2 min-h-[56px] border"
                   }
                   placeholder="your name"
                   {...field}
@@ -99,13 +99,13 @@ const Profile: FC<TProfileProps> = ({ user, clerkId }) => {
           name="username"
           render={({ field }) => (
             <FormItem className={"space-y-3.5 "}>
-              <FormLabel>
+              <FormLabel className={"paragraph-semibold text-dark400_light800"}>
                 Username <span className="text-primary-500">*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   className={
-                    "text-dark300_light700 background-light700_dark300 no-focus paragraph-regular light-border-2 min-h-[56px] border"
+                    "text-dark300_light700 background-light800_dark300 no-focus paragraph-regular light-border-2 min-h-[56px] border"
                   }
                   placeholder="your username"
                   {...field}
@@ -124,12 +124,14 @@ const Profile: FC<TProfileProps> = ({ user, clerkId }) => {
           name="portfolioWebsite"
           render={({ field }) => (
             <FormItem className={"space-y-3.5 "}>
-              <FormLabel>Portfolio website</FormLabel>
+              <FormLabel className={"paragraph-semibold text-dark400_light800"}>
+                Portfolio website
+              </FormLabel>
               <FormControl>
                 <Input
                   type={"url"}
                   className={
-                    "text-dark300_light700 background-light700_dark300 no-focus paragraph-regular light-border-2 min-h-[56px] border"
+                    "text-dark300_light700 background-light800_dark300 no-focus paragraph-regular light-border-2 min-h-[56px] border"
                   }
                   placeholder="your portfolio URL"
                   {...field}
@@ -148,12 +150,14 @@ const Profile: FC<TProfileProps> = ({ user, clerkId }) => {
           name="location"
           render={({ field }) => (
             <FormItem className={"space-y-3.5 "}>
-              <FormLabel>Location</FormLabel>
+              <FormLabel className={"paragraph-semibold text-dark400_light800"}>
+                Location
+              </FormLabel>
               <FormControl>
                 <Input
                   type={"text"}
                   className={
-                    "text-dark300_light700 background-light700_dark300 no-focus paragraph-regular light-border-2 min-h-[56px] border"
+                    "text-dark300_light700 background-light800_dark300 no-focus paragraph-regular light-border-2 min-h-[56px] border"
                   }
                   placeholder="where are you from?"
                   {...field}
@@ -172,11 +176,13 @@ const Profile: FC<TProfileProps> = ({ user, clerkId }) => {
           name="bio"
           render={({ field }) => (
             <FormItem className={"space-y-3.5 "}>
-              <FormLabel>Bio</FormLabel>
+              <FormLabel className={"paragraph-semibold text-dark400_light800"}>
+                Bio
+              </FormLabel>
               <FormControl>
                 <Textarea
                   className={
-                    "text-dark300_light700 background-light700_dark300 no-focus paragraph-regular light-border-2 min-h-[56px] border"
+                    "text-dark300_light700 background-light800_dark300 no-focus paragraph-regular light-border-2 min-h-[56px] border"
                   }
                   placeholder="what's your story?"
                   {...field}
