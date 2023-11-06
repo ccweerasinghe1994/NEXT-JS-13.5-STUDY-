@@ -10,6 +10,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { downVoteAnswer, upVoteAnswer } from "@/lib/actions/answer.action";
 import { toggleSaveQuestion } from "@/lib/actions/user.action";
 import { viewQuestion } from "@/lib/actions/interaction.action";
+import { useToast } from "@/components/ui/use-toast";
 
 type TVotesProps = {
   type: "question" | "answer";
@@ -33,6 +34,7 @@ const Votes: FC<TVotesProps> = ({
 }) => {
   const pathName = usePathname();
   const router = useRouter();
+  const { toast } = useToast();
   const handleSave = async () => {
     try {
       if (type !== "question") return;
@@ -47,7 +49,12 @@ const Votes: FC<TVotesProps> = ({
     }
   };
   const handleVote = async (action: "upvote" | "downVote") => {
-    if (!userId) return;
+    if (!userId) {
+      toast({
+        title: "Please login",
+        description: "You must bew logged in to vote",
+      });
+    }
 
     if (action === "upvote") {
       if (type === "question") {
@@ -67,6 +74,10 @@ const Votes: FC<TVotesProps> = ({
           path: pathName,
         });
       }
+      toast({
+        title: `Upvote ${!hasUpVoted ? "added" : "removed"}!`,
+        variant: !hasUpVoted ? "default" : "destructive",
+      });
     }
 
     if (action === "downVote") {
@@ -87,6 +98,10 @@ const Votes: FC<TVotesProps> = ({
           path: pathName,
         });
       }
+      toast({
+        title: `Down-vote ${!hasDownVoted ? "added" : "removed"}!`,
+        variant: !hasDownVoted ? "default" : "destructive",
+      });
     }
   };
 
