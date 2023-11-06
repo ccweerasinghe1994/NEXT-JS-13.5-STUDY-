@@ -10,6 +10,7 @@ import {
   ICreateQuestionParams,
   IGetQuestionsParams,
   QuestionVoteParams,
+  RecommendedParams,
 } from "@/lib/actions/shared";
 import User, { IUser } from "@/database/user.model";
 import { revalidatePath } from "next/cache";
@@ -314,6 +315,71 @@ export const getHotQuestions = async () => {
       })
       .limit(5);
     return questions as IQuestion[];
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};
+
+export const getRecentQuestions = async (params: RecommendedParams) => {
+  try {
+    await connectToDatabase();
+    const { userId, pageSize = 10, page = 1, searchQuery } = params;
+
+    const user = await User.findOne({ clerkId: userId });
+
+    if (!user) {
+      throwError("User not found");
+    }
+
+    const skipAmount = (page - 1) * pageSize;
+    // find the user interaction
+    const interaction = await Interaction.find({
+      user: user._id,
+    })
+      .populate("tags")
+      .exec();
+
+    //   extract the tags from the interaction
+    const userTags = interaction.reduce((tags: any, interaction: any) => {
+      if (interaction.tags) {
+        tags = tags.concat(interaction.tags);
+      }
+      return tags;
+    }, []);
+
+    //   get distinct tags
+    // @ts-ignore
+    const distinctTags = [...new Set(userTags.map((tag: any) => tag._id))];
+
+    const query: FilterQuery<IQuestion> = {
+      $and: [
+        {
+          tags: { $in: distinctTags },
+        },
+        {
+          author: { $ne: user._id },
+        },
+      ],
+    };
+    if (searchQuery) {
+      query.$or = [
+        { title: { $regex: new RegExp(searchQuery, "i") } },
+        { content: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+
+    const totalQuestions = await Question.countDocuments(query);
+
+    const recommendedQuestions = await Question.find(query)
+      .populate({ path: "tags", model: Tag })
+      .populate({ path: "author", model: User })
+      .limit(pageSize)
+      .skip(skipAmount);
+
+    const isNext = totalQuestions > skipAmount + recommendedQuestions.length;
+
+    return { questions: recommendedQuestions, isNext };
   } catch (e) {
     console.log(e);
     throw e;
